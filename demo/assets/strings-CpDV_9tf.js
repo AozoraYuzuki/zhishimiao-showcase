@@ -1,0 +1,1 @@
+import{xt as e}from"./runtime-core.esm-bundler-Fp4m3CJW.js";var t=(e=``)=>e.replace(/[|\\{}()[\]^$+*?.]/g,`\\$&`).replace(/-/g,`\\x2d`),n=t=>e(t);export{t as n,n as t};

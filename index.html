@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  知食喵 · 项目展示页
+  ----------------------------------------------------------------------------
+  独立单页，零依赖、零构建、可离线双击打开。视觉语言完全复用知食喵前端自身的
+  设计令牌（src/styles/variables.css「芒果落日 · 墨玉交互」），因此本页与
+  阶段 2 的 mock Demo 界面能无缝衔接。
+
+  ⚠️ 本页遵守 variables.css 里那四条对比度铁律：
+     · 亮芒果(brand-400/500) 绝不承白字 —— 只作底 + 配深墨字
+     · 氛围渐变只作背景，其上不承载正文（hero 的光晕只在吉祥物那一侧）
+     · --color-text-muted(#9c8877 仅 3.34:1) 只用于装饰，不承载需阅读的信息
+     · 承载文字的容器一律是实底（白卡 / 墨玉 / 深色代码块）
+
+  ----------------------------------------------------------------------------
+  待接入（阶段 3，见页内 TODO 标记）：
+    1. [阶段3] 功能走查区 4 个截图占位 → 换成真实截图
+    2. [阶段3] 观看演示视频：录屏完成后把 <span> 换成 <a href="...">
+    3. [阶段3] 代码仓库链接：GitHub 仓库转 public 或改指向新的公开仓库
+    4. [待核] 数据速览的「580+ 测试用例」应用 `mvnw test` 复核后定稿
+
+  ⚠️ 主 CTA「进入在线体验」指向同级的 `demo/`。这要求部署成下面这个布局
+     （`..\assemble-pages.ps1` 会自动组装出来，不要单独发 showcase/ 目录）：
+        <站点根>/
+        ├── index.html        ← 本文件
+        ├── assets/           ← 本页的图与字体
+        └── demo/             ← vegetable-shop-frontend/dist-demo/ 的全部内容
+  ============================================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知食喵 · 生鲜电商 &amp; AI 健康咨询平台 | 吴梓淮</title>
+<meta name="description" content="Java 后端 + AI 应用方向的独立全栈项目：工具调用 + RAG 三模式检索 + RRF 融合，状态机 + 原子条件更新解决订单并发一致性。25,000 行代码，580+ 单元测试。">
+<meta name="color-scheme" content="light">
+
+<style>
+/* ==========================================================================
+   1. 设计令牌 —— 取自 vegetable-shop-frontend/src/styles/variables.css
+   ========================================================================== */
+:root {
+  /* 品牌：芒果 */
+  --brand-50:#fff8f1;  --brand-100:#ffedd5; --brand-200:#fed7aa; --brand-300:#fdba74;
+  --brand-400:#fb923c; --brand-500:#f97316; --brand-600:#c2410c; --brand-700:#9a3412;
+  --brand-800:#7c2d12; --brand-900:#431407;
+  --brand-600-rgb:194,65,12; --brand-700-rgb:154,52,18; --brand-900-rgb:67,20,7;
+
+  /* 交互面：墨玉（能承白字） */
+  --action-100:#f0ebe6; --action-200:#d9cdc2; --action-300:#b8a695; --action-400:#8a7461;
+  --action-500:#54443a; --action-600:#1c1917; --action-700:#0f0d0c; --action-900:#050404;
+  --action-600-rgb:28,25,23;
+
+  /* 氛围渐变（只作背景） */
+  --mango-1:#aeb8e6; --mango-2:#efa9c9; --mango-3:#f9c79b; --mango-4:#f58a2e; --mango-5:#e2540c;
+  --grad-band:linear-gradient(90deg,var(--mango-1) 0%,var(--mango-2) 30%,var(--mango-3) 60%,var(--mango-4) 100%);
+  --grad-card:linear-gradient(150deg,var(--mango-2) 0%,var(--mango-3) 46%,var(--mango-4) 100%);
+
+  /* 科技轴（数据 / AI） */
+  --tech-50:#eff7fc; --tech-100:#dbeaf6; --tech-200:#b6d5ec; --tech-600:#0369a1; --tech-700:#075985;
+
+  /* 点缀轴 */
+  --accent-50:#fffbeb; --accent-300:#fde68a; --accent-400:#fbbf24; --accent-500:#f59e0b; --accent-700:#b45309;
+
+  /* 语义色（与品牌刻意分开） */
+  --color-price:#9a3412; --color-success:#15803d; --color-success-soft:#f0fdf4;
+  --color-warning:#a16207; --color-danger:#dc2626;
+  --color-success-rgb:21,128,61; --color-danger-rgb:220,38,38;
+
+  /* 表面 */
+  --color-bg:#fffdfb; --color-surface:#ffffff; --color-surface-sunken:#fbf3ea;
+
+  /* 描边 */
+  --color-border:#e0b98f; --color-border-soft:#f2ddc6; --color-border-neutral:#eee4da;
+
+  /* 文字（暖灰系） */
+  --color-text:#1c1410; --color-text-sub:#6b5a4c; --color-text-muted:#9c8877;
+  --focus-ring:#c2410c;
+
+  /* 圆角 / 阴影 */
+  --radius-sm:6px; --radius-md:10px; --radius-lg:16px; --radius-xl:22px;
+  --shadow-card:0 2px 10px rgba(28,20,14,.06);
+  --shadow-hover:0 6px 20px rgba(28,20,14,.12);
+  --shadow-float:0 18px 50px rgba(120,60,10,.16);
+
+  /* 玻璃 */
+  --glass-blur:blur(10px) saturate(1.5);
+  --glass-edge:inset 0 1px 0 rgba(255,255,255,.65);
+  --glass-shadow:0 2px 8px rgba(28,20,14,.08);
+
+  /* 字体 */
+  --font-brand-zh:'BrandZh','KaiTi','STKaiti','FZKai-Z03S',serif;
+  --font-brand-en:'BrandEn','Segoe Script','Brush Script MT',cursive;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',
+              'Microsoft YaHei','Source Han Sans SC',sans-serif;
+  --font-mono:'Cascadia Code','JetBrains Mono',Consolas,'Courier New',monospace;
+
+  --page-max:1160px;
+}
+
+/* ==========================================================================
+   2. 品牌字体（子集化 woff2，随 assets 一起发；离线可用）
+   ========================================================================== */
+@font-face{font-family:'BrandZh';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-zhi.woff2') format('woff2');unicode-range:U+77E5}   /* 知 */
+@font-face{font-family:'BrandZh';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-shi.woff2') format('woff2');unicode-range:U+98DF}   /* 食 */
+@font-face{font-family:'BrandZh';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-miao.woff2') format('woff2');unicode-range:U+55B5}  /* 喵 */
+@font-face{font-family:'BrandEn';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-en.woff2') format('woff2');unicode-range:U+0020-007E}
+
+/* ==========================================================================
+   3. 基础
+   ========================================================================== */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-sans);font-size:16px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img{max-width:100%;display:block}
+a{color:var(--brand-600);text-decoration:none}
+a:hover{color:var(--brand-700);text-decoration:underline}
+h1,h2,h3,h4{margin:0;line-height:1.28;letter-spacing:-.01em;font-weight:800}
+p{margin:0}
+code,kbd,pre{font-family:var(--font-mono)}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:4px}
+
+.wrap{max-width:var(--page-max);margin:0 auto;padding:0 24px}
+.section{padding:82px 0;border-top:1px solid var(--color-border-neutral)}
+.section:first-of-type{border-top:0}
+
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--brand-700);margin-bottom:12px;
+}
+.eyebrow::before{content:"";width:22px;height:2px;border-radius:2px;background:var(--brand-500)}
+.h2{font-size:clamp(24px,3.2vw,33px);margin-bottom:12px}
+.section-lead{color:var(--color-text-sub);font-size:16.5px;max-width:64ch}
+
+/* ==========================================================================
+   4. 顶栏
+   ========================================================================== */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(255,253,251,.78);
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  border-bottom:1px solid var(--color-border-soft);
+}
+.nav-inner{max-width:var(--page-max);margin:0 auto;padding:11px 24px;
+  display:flex;align-items:center;gap:26px}
+.brand{display:flex;align-items:baseline;gap:9px;text-decoration:none;flex-shrink:0}
+.brand:hover{text-decoration:none}
+.brand-zh{font-family:var(--font-brand-zh);font-size:27px;color:var(--brand-800);line-height:1}
+.brand-en{font-family:var(--font-brand-en);font-size:16px;color:var(--brand-600)}
+.nav-links{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.nav-links a{
+  color:var(--color-text-sub);font-size:14.5px;font-weight:600;
+  padding:7px 11px;border-radius:8px;text-decoration:none;transition:.16s;
+}
+.nav-links a:hover{color:var(--brand-700);background:var(--brand-50);text-decoration:none}
+
+/* 按钮 */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  padding:13px 25px;border-radius:11px;font-size:15px;font-weight:700;
+  border:1px solid transparent;cursor:pointer;text-decoration:none;transition:.18s;
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  box-shadow:var(--glass-edge),var(--glass-shadow);
+}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--glass-edge),var(--shadow-hover);
+  text-decoration:none}
+.btn:active{transform:translateY(0);box-shadow:inset 0 1px 3px rgba(28,20,14,.18)}
+/* 主按钮走墨玉（白字 17.49:1），不走芒果 —— 亮芒果承白字只有 2.26，这是铁律 */
+.btn-primary{background:rgba(var(--action-600-rgb),.94);color:#fff;border-color:rgba(255,255,255,.28)}
+.btn-primary:hover{background:var(--action-600);color:#fff}
+.btn-ghost{background:rgba(255,255,255,.62);color:var(--color-text);
+  border-color:rgba(28,20,14,.16)}
+.btn-ghost:hover{background:rgba(255,255,255,.94);border-color:var(--brand-300);color:var(--brand-700)}
+.btn-sm{padding:9px 17px;font-size:13.5px;border-radius:9px}
+.btn[aria-disabled="true"]{opacity:.62;cursor:not-allowed;box-shadow:none}
+.btn[aria-disabled="true"]:hover{transform:none;box-shadow:none}
+
+/* 「即将开放」小标 */
+.chip{
+  display:inline-block;padding:2px 8px;border-radius:999px;
+  font-size:11px;font-weight:700;letter-spacing:.02em;
+  background:var(--accent-300);color:var(--accent-700);
+}
+.chip-inline{margin-left:7px;vertical-align:1px}
+
+/* ==========================================================================
+   5. Hero
+   ========================================================================== */
+.hero{position:relative;overflow:hidden;padding:66px 0 74px}
+/* 氛围光晕：只铺在右侧吉祥物一侧，文字列留在实底上 —— 渐变不承载文字 */
+.hero-glow{
+  position:absolute;top:-16%;right:-14%;width:62%;max-width:760px;aspect-ratio:1;
+  background:radial-gradient(circle at 50% 50%,
+    rgba(249,199,155,.62) 0%, rgba(239,169,201,.34) 38%, rgba(174,184,230,.16) 64%, transparent 76%);
+  filter:blur(12px);pointer-events:none;z-index:0;
+}
+.hero-grid{position:relative;z-index:1;display:grid;
+  grid-template-columns:minmax(0,1fr) 378px;gap:44px;align-items:center}
+
+.hero-title{font-size:clamp(30px,4.6vw,47px);letter-spacing:-.022em;margin-bottom:16px}
+.hero-title em{font-style:normal;color:var(--brand-700)}
+.hero-sub{color:var(--color-text-sub);font-size:17px;max-width:56ch;margin-bottom:22px}
+/* 单行内联文本：换行时中点作为普通标点自然折断，不会出现"孤零零挂行尾"的 flex 残留 */
+.hero-id{font-size:14.5px;font-weight:700;color:var(--brand-700);margin-bottom:20px}
+
+.stack{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.stack span{
+  font-size:12.5px;font-weight:600;color:var(--color-text-sub);
+  background:var(--color-surface);border:1px solid var(--color-border-soft);
+  padding:5px 11px;border-radius:999px;
+}
+
+.anchor{
+  border-left:3px solid var(--brand-500);background:var(--brand-50);
+  border-radius:0 var(--radius-md) var(--radius-md) 0;
+  padding:15px 19px;margin-bottom:28px;max-width:60ch;
+}
+.anchor p{font-size:15.5px;font-weight:700;color:var(--brand-800);line-height:1.62}
+.anchor small{display:block;margin-top:6px;font-size:12.5px;font-weight:600;
+  color:var(--color-text-sub);letter-spacing:.01em}
+
+.hero-cta{display:flex;gap:13px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+.hero-meta{font-size:13.5px;color:var(--color-text-sub);display:flex;gap:9px;
+  flex-wrap:wrap;align-items:center}
+.hero-meta .sep{color:var(--color-border)}
+
+/* ---------- 吉祥物：平台 CatMascot.vue 的静态复刻 ----------
+   素材是带 alpha 的 5s 循环动图（呼吸 / 摆尾 / 眨眼由生成模型逐帧画出），
+   CSS 只负责"整只猫"这一层的运动：透视旋转 + 轻微悬浮 + 点击轻跳。 */
+.cat-mascot{
+  position:relative;width:100%;max-width:378px;margin:0 auto;
+  aspect-ratio:1/1;                    /* 素材是正方形，零留白 */
+  perspective:900px;perspective-origin:50% 46%;
+  cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;
+}
+/* 倾斜层：跟随鼠标的真实 3D 旋转（--rx / --ry 由脚本写入） */
+.cat-stage{
+  position:absolute;inset:0;transform-style:preserve-3d;
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));
+  transition:transform .3s cubic-bezier(.2,.8,.25,1);will-change:transform;
+}
+/* 位移层：素材自带呼吸，这里幅度刻意收小到 5px，避免叠成"飘气球" */
+.cat-float{position:absolute;inset:0;transform-style:preserve-3d;
+  animation:catFloat 4.8s ease-in-out infinite}
+@keyframes catFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.cat-mascot.is-hop .cat-float{animation:catHop .62s cubic-bezier(.3,1.4,.4,1)}
+@keyframes catHop{
+  0%{transform:translateY(0) scale(1)}
+  28%{transform:translateY(6px) scale(1.04,.94)}
+  62%{transform:translateY(-26px) scale(.97,1.05)}
+  100%{transform:translateY(0) scale(1)}
+}
+/* 媒体层：translateZ 产生视差；drop-shadow 按 alpha 剪影投影，
+   这是"它立在地上"而不是"贴在页面上"的关键 */
+.cat-media{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  transform:translateZ(20px);
+  filter:drop-shadow(0 16px 26px rgba(67,20,7,.34));
+  pointer-events:none;opacity:0;transition:opacity .4s ease;
+}
+.cat-mascot.is-ready .cat-media{opacity:1}
+/* 地面接触阴影：原版是白色光晕（为登录页深色底设计），
+   本页是暖白底，改为暖色投影才看得见 */
+.cat-floor{
+  position:absolute;left:50%;bottom:2%;width:74%;height:26%;border-radius:50%;
+  transform:translateX(-50%) rotateX(74deg) translateZ(-60px);transform-origin:50% 50%;
+  background:radial-gradient(closest-side,
+    rgba(67,20,7,.19) 0%,rgba(67,20,7,.08) 55%,rgba(67,20,7,0) 100%);
+  pointer-events:none;
+}
+/* 头顶气泡 */
+.cat-bubble{
+  position:absolute;top:-2%;left:50%;padding:8px 15px;
+  border-radius:16px 16px 16px 5px;background:rgba(255,255,255,.95);
+  color:var(--brand-600);font-size:13px;font-weight:700;line-height:1;
+  white-space:nowrap;box-shadow:0 10px 24px rgba(67,20,7,.2);
+  animation:bubbleIn .6s cubic-bezier(.2,1.35,.4,1) 1.3s both;pointer-events:none;
+}
+@keyframes bubbleIn{
+  from{opacity:0;transform:translateX(-50%) translateZ(70px) scale(.55) translateY(10px)}
+  to{opacity:1;transform:translateX(-50%) translateZ(70px) scale(1) translateY(0)}
+}
+.cat-bubble::after{
+  content:'';position:absolute;left:22px;bottom:-5px;width:12px;height:12px;
+  border-radius:0 0 3px 0;background:rgba(255,255,255,.95);transform:rotate(45deg);
+}
+
+/* ==========================================================================
+   6. 数据速览
+   ========================================================================== */
+.metrics{-webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+  display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--color-border-neutral);
+  border:1px solid var(--color-border-neutral);border-radius:var(--radius-lg);
+  overflow:hidden;box-shadow:var(--shadow-card)}
+.metric{background:var(--color-surface);padding:26px 22px;text-align:center}
+.metric b{display:block;font-size:clamp(26px,3.4vw,34px);font-weight:800;
+  color:var(--brand-700);letter-spacing:-.02em;line-height:1.15}
+.metric span{display:block;margin-top:7px;font-size:13.5px;font-weight:600;
+  color:var(--color-text-sub)}
+.metric i{display:block;margin-top:5px;font-size:11.5px;font-style:normal;
+  color:var(--color-text-muted)}
+
+/* ==========================================================================
+   7. 卡片
+   ========================================================================== */
+.card{background:var(--color-surface);border:1px solid var(--color-border-soft);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-card)}
+.card-pad{padding:28px}
+
+/* 架构分层说明 */
+.layers{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-top:26px}
+.layer{padding:19px;border-radius:var(--radius-md);
+  background:var(--color-surface);border:1px solid var(--color-border-soft);
+  border-top:3px solid var(--brand-400)}
+.layer:nth-child(2){border-top-color:var(--mango-4)}
+.layer:nth-child(3){border-top-color:var(--tech-600)}
+.layer:nth-child(4){border-top-color:var(--mango-2)}
+.layer h4{font-size:14.5px;margin-bottom:7px}
+.layer p{font-size:13px;color:var(--color-text-sub);line-height:1.6}
+
+/* 图容器 */
+.figure{margin-top:26px;background:var(--color-surface);
+  border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);
+  padding:13px;box-shadow:var(--shadow-card);overflow:hidden}
+.figure img{width:100%;border-radius:var(--radius-md);background:#fff;cursor:zoom-in;
+  transition:opacity .18s}
+/* 图本体容器：桌面裁圆角；窄屏改为可横向滑动，见下方 media query */
+.fig-scroll{border-radius:var(--radius-md);overflow:hidden}
+.figure img:hover{opacity:.93}
+.figure figcaption{padding:13px 8px 5px;font-size:13.5px;color:var(--color-text-sub);
+  display:flex;gap:9px;align-items:flex-start}
+.figure figcaption b{color:var(--color-text);font-weight:700;flex-shrink:0}
+
+/* ==========================================================================
+   8. 亮点卡
+   ========================================================================== */
+.highlights{display:flex;flex-direction:column;gap:26px;margin-top:32px}
+.hl{position:relative;overflow:hidden}
+.hl::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+  background:linear-gradient(180deg,var(--mango-4),var(--brand-600))}
+.hl-head{display:flex;align-items:flex-start;gap:15px;margin-bottom:20px}
+.hl-no{
+  flex-shrink:0;width:42px;height:42px;border-radius:12px;
+  display:grid;place-items:center;font-size:19px;font-weight:800;
+  color:var(--brand-800);background:var(--grad-card);
+  box-shadow:0 4px 12px rgba(120,60,10,.18)}
+.hl-title{font-size:20px;margin-bottom:5px}
+.hl-tagline{font-size:14.5px;color:var(--color-text-sub)}
+.hl-body{padding-left:57px}
+
+.hl-row{display:grid;grid-template-columns:88px 1fr;gap:16px;padding:12px 0;
+  border-top:1px dashed var(--color-border-soft)}
+.hl-row:first-child{border-top:0}
+.hl-row dt{font-size:12.5px;font-weight:800;letter-spacing:.05em;
+  color:var(--brand-700);padding-top:3px}
+.hl-row dd{margin:0;font-size:15px;line-height:1.72}
+.hl-row dd strong{font-weight:700;color:var(--brand-800)}
+/* 标签用「实底药丸 + 深色字」，不在渐变上直接放彩色字 */
+.kbd{display:inline-block;padding:1px 7px;border-radius:5px;font-size:12.5px;
+  font-weight:700;font-family:var(--font-mono);
+  background:var(--color-surface-sunken);color:var(--brand-800);
+  border:1px solid var(--color-border-soft)}
+
+.code{margin-top:16px;background:var(--action-900);border-radius:var(--radius-md);
+  overflow:hidden;border:1px solid #26221f}
+.code-head{display:flex;align-items:center;gap:8px;padding:9px 15px;
+  background:#141110;border-bottom:1px solid #26221f}
+.code-head span{font-size:12px;font-family:var(--font-mono);color:#c9bdb1}
+.code-head .f{margin-left:auto;color:#8d8177}
+.code pre{margin:0;padding:16px 18px;overflow-x:auto;font-size:13px;line-height:1.72;
+  color:#f4ece4}
+.code .kw{color:#ff9d5c}      /* 关键字 */
+.code .st{color:#a8d8a0}      /* 字符串 */
+.code .cm{color:#8d8177;font-style:italic}  /* 注释 */
+.code .fn{color:#8fc9f0}      /* 方法名 */
+
+.evidence{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.evidence span{font-size:12.5px;font-weight:600;color:var(--tech-700);
+  background:var(--tech-50);border:1px solid var(--tech-100);
+  padding:4px 11px;border-radius:999px;font-family:var(--font-mono)}
+
+/* ==========================================================================
+   9. 关键链路（页签）
+   ========================================================================== */
+.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:28px 0 20px}
+.tab{
+  padding:10px 17px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;
+  background:var(--color-surface);border:1px solid var(--color-border-soft);
+  color:var(--color-text-sub);transition:.16s;font-family:inherit;
+}
+.tab:hover{border-color:var(--brand-300);color:var(--brand-700)}
+.tab[aria-selected="true"]{background:var(--action-600);border-color:var(--action-600);color:#fff}
+.panel[hidden]{display:none}
+
+.flow-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:22px}
+.note{padding:18px;border-radius:var(--radius-md);background:var(--color-surface-sunken);
+  border:1px solid var(--color-border-soft)}
+.note h4{font-size:14px;margin-bottom:7px;color:var(--brand-800)}
+.note p{font-size:13px;color:var(--color-text-sub);line-height:1.65}
+
+/* ==========================================================================
+   10. 功能走查占位
+   ========================================================================== */
+.shots{display:grid;grid-template-columns:repeat(2,1fr);gap:19px;margin-top:30px}
+.shot{
+  border:1.5px dashed var(--color-border);border-radius:var(--radius-lg);
+  background:linear-gradient(180deg,var(--color-surface) 0%,var(--brand-50) 100%);
+  min-height:214px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:9px;padding:26px;text-align:center;
+}
+.shot .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+  background:rgba(255,255,255,.9);border:1px solid var(--color-border-soft);
+  font-size:19px}
+.shot b{font-size:15px}
+.shot span{font-size:12.5px;color:var(--color-text-sub);font-family:var(--font-mono)}
+.shot .todo{font-size:11.5px;font-weight:700;color:var(--accent-700);
+  background:var(--accent-300);padding:2px 9px;border-radius:999px}
+
+/* ==========================================================================
+   11. 工程与安全
+   ========================================================================== */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:19px;margin-top:30px}
+.panel-card{padding:25px}
+.panel-card h4{font-size:16px;margin-bottom:15px;display:flex;align-items:center;gap:9px}
+.panel-card h4 .ico{width:29px;height:29px;border-radius:9px;display:grid;
+  place-items:center;font-size:14px;background:var(--brand-100);flex-shrink:0}
+.tick{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px}
+.tick li{position:relative;padding-left:23px;font-size:14px;line-height:1.6;
+  color:var(--color-text-sub)}
+.tick li::before{content:"";position:absolute;left:0;top:8px;width:12px;height:12px;
+  border-radius:50%;background:var(--color-success-soft);
+  border:2.5px solid var(--color-success)}
+.tick li b{color:var(--color-text);font-weight:700}
+
+/* ==========================================================================
+   12. 底部
+   ========================================================================== */
+.foot{background:var(--action-600);color:#e9e1d9;padding:52px 0 40px;margin-top:0}
+.foot-grid{display:flex;justify-content:space-between;gap:34px;flex-wrap:wrap;
+  align-items:flex-start}
+.foot .brand-zh{color:#fff}
+.foot .brand-en{color:var(--brand-300)}
+.foot p{color:#b5a99d;font-size:14px;max-width:46ch;margin-top:12px;line-height:1.7}
+.foot-links{display:flex;flex-direction:column;gap:10px;font-size:14px}
+.foot-links a{color:#fff;font-weight:600}
+.foot-links a:hover{color:var(--brand-300)}
+.foot-note{margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,.13);
+  font-size:12.5px;color:#9c8f83;line-height:1.7}
+
+/* 灯箱 */
+.lightbox{position:fixed;inset:0;z-index:100;display:none;
+  background:rgba(28,20,14,.9);backdrop-filter:blur(6px);
+  padding:32px;overflow:auto}
+.lightbox[open],.lightbox.on{display:flex;align-items:center;justify-content:center}
+.lightbox img{max-width:100%;max-height:90vh;border-radius:var(--radius-md);
+  box-shadow:var(--shadow-float)}
+.lightbox .close{position:fixed;top:18px;right:22px;background:rgba(255,255,255,.14);
+  color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:10px;
+  padding:9px 15px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.lightbox .close:hover{background:rgba(255,255,255,.26)}
+
+/* ==========================================================================
+   12.5 「用文件方式打开」警告条
+   --------------------------------------------------------------------------
+   为什么需要：双击 index.html 时地址是 file://，此时
+     · 浏览器**不会**把目录解析成 index.html，点 demo/ 只会看到目录列表；
+     · Demo 是 ES Module，file:// 下会被 CORS 直接拦掉。
+   与其让人对着目录列表发懵，不如在页面上直接说清楚该怎么做。
+   ========================================================================== */
+.filewarn{
+  position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:200;
+  width:min(920px,calc(100vw - 28px));
+  background:var(--accent-50);border:1px solid var(--accent-300);
+  border-left:4px solid var(--accent-500);
+  border-radius:var(--radius-md);box-shadow:var(--shadow-float);
+  padding:14px 46px 14px 18px;
+  -webkit-backdrop-filter:var(--glass-blur);backdrop-filter:var(--glass-blur);
+}
+.filewarn[hidden]{display:none}
+.filewarn b{display:block;font-size:14.5px;color:var(--accent-700);margin-bottom:5px}
+.filewarn span{display:block;font-size:13px;line-height:1.65;color:var(--color-text-sub)}
+.filewarn code{
+  font-size:12px;background:#fff;border:1px solid var(--accent-300);
+  padding:1px 6px;border-radius:5px;color:var(--accent-700);
+}
+.filewarn .close{
+  position:absolute;top:9px;right:10px;width:26px;height:26px;
+  display:grid;place-items:center;border-radius:7px;cursor:pointer;
+  border:1px solid var(--accent-300);background:#fff;color:var(--accent-700);
+  font-size:14px;line-height:1;font-family:inherit;
+}
+.filewarn .close:hover{background:var(--accent-300)}
+.filewarn.is-shake{animation:warnShake .42s cubic-bezier(.36,.07,.19,.97)}
+@keyframes warnShake{
+  0%,100%{transform:translateX(-50%)}
+  20%{transform:translateX(calc(-50% - 7px))}
+  45%{transform:translateX(calc(-50% + 6px))}
+  70%{transform:translateX(calc(-50% - 4px))}
+}
+@media (max-width:620px){
+  .filewarn{top:8px;padding:12px 40px 12px 14px}
+  .filewarn b{font-size:13.5px}
+  .filewarn span{font-size:12px}
+}
+
+/* ==========================================================================
+   13. 响应式
+   ========================================================================== */
+@media (max-width:980px){
+  .hero-grid{grid-template-columns:1fr;gap:30px}
+  .cat-mascot{order:-1;max-width:250px}
+  .hero-glow{right:-34%;width:88%}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+  .layers{grid-template-columns:repeat(2,1fr)}
+  .grid-3,.flow-notes,.shots{grid-template-columns:1fr}
+  .section{padding:62px 0}
+}
+@media (max-width:620px){
+  .nav-links{display:none}
+  .hero{padding:42px 0 56px}
+  .wrap{padding:0 18px}
+  .card-pad{padding:21px}
+  .hl-body{padding-left:0;margin-top:16px}
+  .hl-head{gap:12px}
+  .hl-row{grid-template-columns:1fr;gap:3px}
+  .hl-row dt{padding-top:0}
+  .metrics{grid-template-columns:1fr}
+  .layers{grid-template-columns:1fr}
+  .btn{padding:12px 19px;font-size:14px}
+
+  /* 🔴 窄屏下架构图/时序图缩到 390px 会糊成一片色块 —— 改成可横向滑动，
+     并给一个大于视口的 min-width，让图保持可读，手指左右拖动即可看全。
+     配套：灯箱在窄屏也必须放原尺寸，否则点开依然看不清。 */
+  .fig-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;
+    border:1px solid var(--color-border-soft)}
+  .fig-scroll img{min-width:720px}
+  .figure figcaption{flex-direction:column;gap:2px}
+  .lightbox{padding:12px;align-items:flex-start;justify-content:flex-start}
+  .lightbox img{max-width:none;max-height:none;width:1120px;margin:52px 0}
+  .code pre{font-size:11.5px;padding:13px 14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- 「用文件方式打开」警告：默认隐藏，仅当协议是 file: 时由脚本显示 -->
+<div class="filewarn" id="filewarn" hidden role="alert">
+  <b>⚠️ 检测到你是用「文件方式」打开的，在线体验点不进去</b>
+  <span>
+    双击 HTML 得到的地址是 <code>file://</code>。浏览器在这种协议下①不会把目录解析成
+    <code>index.html</code>（所以点进去只看到目录列表），②会拦掉 Demo 用到的 ES Module。
+    <br>
+    请改用本地服务打开：在仓库根目录<strong>双击 <code>preview-pages.cmd</code></strong>，
+    或执行 <code>python -m http.server 4300 --directory pages</code> 后访问
+    <code>http://localhost:4300/</code>。
+  </span>
+  <button class="close" type="button" data-fw-close aria-label="关闭提示">✕</button>
+</div>
+
+<!-- ======================= 顶栏 ======================= -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top">
+      <span class="brand-zh">知食喵</span>
+      <span class="brand-en">Meowlia</span>
+    </a>
+    <div class="nav-links">
+      <a href="#arch">系统架构</a>
+      <a href="#highlights">核心亮点</a>
+      <a href="#flows">关键链路</a>
+      <a href="#shots">功能走查</a>
+      <a href="#engineering">工程与安全</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================= Hero ======================= -->
+<header class="hero" id="top">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="wrap hero-grid">
+
+    <div>
+      <p class="hero-id">Java 后端开发 · AI 应用方向 · 独立完成前后端全栈落地</p>
+      <h1 class="hero-title">生鲜电商 &amp; <em>AI 健康咨询</em>平台</h1>
+
+      <p class="hero-sub">
+        一个前后端分离的全栈项目：后端 Spring Boot 提供纯 API，前端 Vue 3 独立工程。
+        从数据库设计、接口开发、AI 客服到前端页面，全部由我一人完成。
+      </p>
+
+      <div class="stack">
+        <span>Spring Boot</span><span>Spring Security / JWT</span><span>MyBatis</span>
+        <span>MySQL 8</span><span>Redis</span><span>Flyway</span>
+        <span>Vue 3</span><span>TypeScript</span><span>Vite</span>
+        <span>Element Plus</span><span>ECharts</span><span>Docker Compose</span>
+      </div>
+
+      <div class="anchor">
+        <p>一手 AI（工具调用 + RAG + RRF），一手并发（状态机 + 原子条件更新），外面包一层单元测试。</p>
+        <small>项目里投入最深的两条线 —— 也是下面重点展开的部分</small>
+      </div>
+
+      <div class="hero-cta">
+        <!-- 阶段 2 已接入：指向同级的 demo/（纯静态 mock 版商城，无需后端） -->
+        <a class="btn btn-primary" href="demo/">
+          进入在线体验
+          <span aria-hidden="true">→</span>
+        </a>
+        <!-- [阶段3] 录屏完成后：把 <span> 换成 <a href="视频地址"> 即可 -->
+        <span class="btn btn-ghost" aria-disabled="true">
+          观看演示视频
+          <span class="chip chip-inline">待录制</span>
+        </span>
+      </div>
+
+      <div class="hero-meta">
+        <span>2026.03 – 2026.09</span><span class="sep">|</span>
+        <span>一人独立开发</span><span class="sep">|</span>
+        <span>吴梓淮</span>
+      </div>
+    </div>
+
+    <!--
+      品牌吉祥物：与平台线上跑的是同一个组件（CatMascot.vue）的静态复刻。
+      · 素材：cat-idle.webm（VP9 + alpha，600×600 / 24fps / 120 帧 / 5s 循环）
+      · 兜底：cat-idle.webp（动画 WebP，480×480 / 60 帧）—— 只在浏览器不认
+        WebM alpha 时才请求（Firefox 会把透明区渲染成黑块，Safari 不支持 VP9）
+      · 3D 感：外层 perspective 建透视，内层跟着鼠标做 rotateX / rotateY
+      媒体元素由页面底部脚本按能力注入，避免主流浏览器白白多下一个 1.5MB 兜底包。
+    -->
+    <div class="cat-mascot" id="catMascot"
+         role="img" aria-label="知食喵吉祥物：一位举着放大镜挑选食材的暹罗猫厨师">
+      <div class="cat-floor" aria-hidden="true"></div>
+      <div class="cat-stage">
+        <div class="cat-float">
+          <div class="cat-bubble" aria-hidden="true">喵～ 今天想吃点啥？</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- ======================= 数据速览 ======================= -->
+<section class="section" id="metrics" style="padding-top:0">
+  <div class="wrap">
+    <!-- [待核] 580 为 @Test 注解实测数；请跑一次 mvnw test 复核后定稿 -->
+    <div class="metrics">
+      <div class="metric"><b>25,000</b><span>行全栈代码</span>
+        <i>Java 11,881 · 前端 13,133</i></div>
+      <div class="metric"><b>580+</b><span>单元测试用例</span>
+        <i>65 个测试类</i></div>
+      <div class="metric"><b>20</b><span>数据库迁移版本</span>
+        <i>Flyway V1 – V20 全自动建表</i></div>
+      <div class="metric"><b>59</b><span>Controller / Service</span>
+        <i>14 控制器 · 45 服务类</i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 系统架构 ======================= -->
+<section class="section" id="arch">
+  <div class="wrap">
+    <div class="eyebrow">系统架构</div>
+    <h2 class="h2">四层分离，依赖单向向下</h2>
+    <p class="section-lead">
+      以「下单」这条主链路为例，从浏览器发出的请求如何穿过路由守卫、鉴权过滤器、订单事务，
+      最终落到 MySQL 与 Redis。所有状态变更都在 Service 层收口，Controller 不碰业务规则。
+    </p>
+
+    <figure class="figure" style="margin-top:30px">
+      <div class="fig-scroll">
+        <img src="assets/diagram-architecture.png" alt="知食喵全栈业务架构与分层依赖图"
+             width="1600" height="562" data-zoom>
+      </div>
+      <figcaption>
+        <b>全栈架构与分层依赖</b>
+        <span>点击图片可放大查看</span>
+      </figcaption>
+    </figure>
+
+    <div class="layers">
+      <div class="layer">
+        <h4>前端应用层</h4>
+        <p>路由守卫与鉴权状态（Pinia store）统一判定；axios 拦截器集中注入 token、处理 401/403。</p>
+      </div>
+      <div class="layer">
+        <h4>接入 / 鉴权层</h4>
+        <p>Vite 代理转发；Spring Security 过滤器链校验 JWT，解析出 userId 与角色写入上下文。</p>
+      </div>
+      <div class="layer">
+        <h4>订单服务层 · 核心事务</h4>
+        <p>购物车校验与去重、优惠券锁单核销、订单创建 —— 整个流程包在一个事务里。</p>
+      </div>
+      <div class="layer">
+        <h4>数据与存储层</h4>
+        <p>MyBatis 注解版数据访问；MySQL 8 主库持久化；Redis 承担缓存、延迟队列与限流。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 核心亮点 ======================= -->
+<section class="section" id="highlights">
+  <div class="wrap">
+    <div class="eyebrow">核心亮点</div>
+    <h2 class="h2">三件我做得比较深的事</h2>
+    <p class="section-lead">
+      每一条都按「问题 → 方案 → 证据」写，证据指向仓库里真实的类与代码。
+    </p>
+
+    <div class="highlights">
+
+      <!-- 亮点 1 -->
+      <article class="card card-pad hl">
+        <div class="hl-head">
+          <div class="hl-no">1</div>
+          <div>
+            <h3 class="hl-title">AI 工具不可能被诱导越权</h3>
+            <p class="hl-tagline">大模型能伪造参数，但不该能伪造身份</p>
+          </div>
+        </div>
+        <div class="hl-body">
+          <dl>
+            <div class="hl-row">
+              <dt>问题</dt>
+              <dd>
+                AI 客服挂了 <span class="kbd">list_my_orders</span>、<span class="kbd">list_my_coupons</span>
+                这类"查我自己数据"的工具。如果 <strong>userId 由模型传参</strong>，用户只要在对话里说
+                "帮我查一下 1002 号用户的订单"，模型就可能照做 —— 变成一条绕过鉴权的越权通道。
+              </dd>
+            </div>
+            <div class="hl-row">
+              <dt>方案</dt>
+              <dd>
+                工具签名里<strong>根本没有 userId 参数</strong>，它由服务端从登录态注入，模型能控制的只有业务参数
+                （关键词、分页等）。同时维护工具白名单，非白名单工具直接拒绝并记警告日志。
+              </dd>
+            </div>
+            <div class="hl-row">
+              <dt>证据</dt>
+              <dd>
+                <code>service/ai/AiToolRegistry.java</code> —— 工具执行入口的签名即
+                <span class="kbd">execute(Integer userId, String name, String argsJson)</span>，
+                userId 不在模型可控的 <span class="kbd">argsJson</span> 里。
+              </dd>
+            </div>
+          </dl>
+
+          <div class="code">
+            <div class="code-head">
+              <span>AiToolRegistry.java</span>
+              <span class="f">工具注册与执行</span>
+            </div>
+<pre><code><span class="cm">// 工具签名里没有 userId —— 模型无法伪造，天然防越权</span>
+<span class="st">"list_my_orders"</span>,  (userId, args) -&gt; safe(() -&gt; <span class="fn">listMyOrders</span>(orderService, userId)),
+<span class="st">"list_my_coupons"</span>, (userId, args) -&gt; safe(() -&gt; <span class="fn">listMyCoupons</span>(couponService, userId)),
+
+<span class="kw">public</span> String <span class="fn">execute</span>(Integer userId, String name, String argsJson) {
+    <span class="kw">if</span> (!HANDLERS.containsKey(name)) {
+        log.warn(<span class="st">"[aiTool] 拒绝非白名单工具：user={} tool={}"</span>, userId, name);
+        <span class="kw">return</span> errorJson(<span class="st">"不允许的工具"</span>);
+    }
+    <span class="cm">// userId 由调用方（服务端）传入，不经过模型</span>
+    <span class="kw">return</span> HANDLERS.get(name).apply(userId, argsJson);
+}</code></pre>
+          </div>
+
+          <div class="evidence">
+            <span>service/ai/AiToolRegistry.java</span>
+            <span>service/ai/KnowledgeRetriever.java</span>
+            <span>controller/AiController.java</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 亮点 2 -->
+      <article class="card card-pad hl">
+        <div class="hl-head">
+          <div class="hl-no">2</div>
+          <div>
+            <h3 class="hl-title">订单并发一致性：状态机 + 原子条件更新</h3>
+            <p class="hl-tagline">支付回调和超时关单同时改一个订单，谁赢由数据库裁决</p>
+          </div>
+        </div>
+        <div class="hl-body">
+          <dl>
+            <div class="hl-row">
+              <dt>问题</dt>
+              <dd>
+                用户点支付的瞬间，超时关单任务可能也在跑，两个线程同时读到订单是"待支付"。
+                如果用<strong>"先查再改"</strong>，两边都会判定合法、双双写成功 ——
+                <strong>结果就是已支付的订单被误关</strong>，用户付了钱订单却取消了。
+              </dd>
+            </div>
+            <div class="hl-row">
+              <dt>方案</dt>
+              <dd>
+                状态机的每条合法流转都对应一条<strong>自带"当前状态"条件的原子 UPDATE</strong>，
+                靠<strong>影响行数</strong>判断胜负：0 行说明状态已被别人改过，本次操作直接失败。
+                库存同理，用 <span class="kbd">stock &gt;= qty</span> 条件更新防超卖。
+              </dd>
+            </div>
+            <div class="hl-row">
+              <dt>证据</dt>
+              <dd>
+                <code>mapper/OrderMapper.java</code> 里 7 条流转方法（markPaid / markShipped /
+                markFinished / markCancelled / markRefunding / markRefunded / markRefundRejected），
+                每条 SQL 都带状态条件。
+              </dd>
+            </div>
+          </dl>
+
+          <div class="code">
+            <div class="code-head">
+              <span>OrderMapper.java · ProductMapper.java</span>
+              <span class="f">条件更新</span>
+            </div>
+<pre><code><span class="cm">-- 支付：只有当前确实是"待支付"才更新；已被超时关单则影响 0 行</span>
+<span class="kw">update</span> orders <span class="kw">set</span> status = 1, pay_time = now()
+<span class="kw">where</span> id = #{id} <span class="kw">and</span> status = 0
+
+<span class="cm">-- 超时关单：同样要求当前必须是"待支付"</span>
+<span class="kw">update</span> orders <span class="kw">set</span> status = 4, cancel_time = now()
+<span class="kw">where</span> id = #{id} <span class="kw">and</span> status = 0
+
+<span class="cm">-- 扣库存：条件里带 stock &gt;= qty，从 SQL 层面堵死超卖</span>
+<span class="kw">update</span> tb_product
+   <span class="kw">set</span> stock = stock - #{quantity}
+ <span class="kw">where</span> id = #{productId}
+   <span class="kw">and</span> stock &gt;= #{quantity}</code></pre>
+          </div>
+
+          <div class="evidence">
+            <span>mapper/OrderMapper.java</span>
+            <span>mapper/ProductMapper.java</span>
+            <span>service/OrderServiceImpl.java</span>
+            <span>service/StockService.java</span>
+            <span>enums/OrderStatus.java</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 亮点 3 -->
+      <article class="card card-pad hl">
+        <div class="hl-head">
+          <div class="hl-no">3</div>
+          <div>
+            <h3 class="hl-title">RAG 三模式检索 + RRF 排名融合</h3>
+            <p class="hl-tagline">两路召回的量纲完全不同，所以只用排名、不用分数</p>
+          </div>
+        </div>
+        <div class="hl-body">
+          <dl>
+            <div class="hl-row">
+              <dt>问题</dt>
+              <dd>
+                纯关键词检索召回差 —— 用户换个说法就搜不到；纯向量检索对精确词（菜名、规格）又不准。
+                而两路分数<strong>量纲完全不同</strong>：关键词是整数权重累加，向量是 0~1 余弦相似度。
+                直接加权求和得靠人工标定缩放系数，语料一变就失准。
+              </dd>
+            </div>
+            <div class="hl-row">
+              <dt>方案</dt>
+              <dd>
+                实现关键词（中文 2-gram + 标题加权）、向量（余弦相似度）、混合三种检索模式；
+                混合模式默认用 <strong>RRF 倒数排名融合</strong> —— 只看排名不看分数，
+                天然免标定、对分数分布不敏感。另带降级链：向量不可用时自动退回关键词检索。
+              </dd>
+            </div>
+            <div class="hl-row">
+              <dt>证据</dt>
+              <dd>
+                <code>service/ai/rag/RankFusion.java</code> ——
+                <span class="kbd">score(d) = Σ 1/(k + rank_i(d))</span>，平滑常数 k 默认 60。
+              </dd>
+            </div>
+          </dl>
+
+          <div class="code">
+            <div class="code-head">
+              <span>RankFusion.java</span>
+              <span class="f">reciprocalRankFusion</span>
+            </div>
+<pre><code><span class="cm">// 只需排名，不需要跨路校准分数 —— 关键词与向量分数不同量纲也能融合</span>
+<span class="kw">for</span> (List&lt;String&gt; ranked : rankedLists) {
+    <span class="kw">int</span> rank = 1;
+    <span class="kw">for</span> (String id : ranked) {
+        <span class="cm">// RRF：同一片段在多路出现则得分累加</span>
+        fused.merge(id, 1d / (smooth + rank), Double::sum);
+        rank++;
+    }
+}</code></pre>
+          </div>
+
+          <div class="evidence">
+            <span>service/ai/rag/RankFusion.java</span>
+            <span>service/ai/rag/TextTokenizer.java</span>
+            <span>service/ai/rag/VectorIndex.java</span>
+            <span>service/ai/rag/EmbeddingStore.java</span>
+            <span>config/AiRagConfig.java</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 关键链路 ======================= -->
+<section class="section" id="flows">
+  <div class="wrap">
+    <div class="eyebrow">关键链路</div>
+    <h2 class="h2">把"一次下单"拆开看</h2>
+    <p class="section-lead">
+      下面四张图分别回答：请求怎么走完整个链路、钱和超时同时到来时谁说了算、
+      订单状态怎么流转，以及 AI 客服怎么取数作答。
+    </p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true"  data-tab="t1">下单请求生命周期</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="t2">支付与超时关单竞态</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="t3">订单状态机与流转约束</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="t4">AI 客服对话链路</button>
+    </div>
+
+    <div class="panel" id="t1">
+      <figure class="figure">
+        <div class="fig-scroll">
+          <img src="assets/diagram-order.png" alt="下单请求生命周期时序图"
+               width="1600" height="590" data-zoom>
+        </div>
+        <figcaption><b>下单请求生命周期</b>
+          <span>前端 → 事务 → 落库：入口与事务边界、闸门与幂等、扣减与回滚</span></figcaption>
+      </figure>
+      <div class="flow-notes">
+        <div class="note"><h4>入口与事务边界</h4>
+          <p>token 在 axios 拦截器统一注入；<code>createOrder</code> 标在事务内，购物车校验、优惠券核销、订单落库同生共死。</p></div>
+        <div class="note"><h4>闸门与幂等</h4>
+          <p>先校验地址与购物车是否为空，再按勾选项取数；删除已选购物车项按影响行数判断，避免重复提交造成重复扣减。</p></div>
+        <div class="note"><h4>扣减与风险</h4>
+          <p>扣库存走 <code>stock &gt;= qty</code> 条件更新；下单成功即向 Redis ZSET 写入延迟关单任务。</p></div>
+      </div>
+    </div>
+
+    <div class="panel" id="t2" hidden>
+      <figure class="figure">
+        <div class="fig-scroll">
+          <img src="assets/diagram-payment.png" alt="支付回调与超时关单竞态时序图"
+               width="1600" height="590" data-zoom>
+        </div>
+        <figcaption><b>支付与超时关单竞态</b>
+          <span>两个线程争抢同一订单，用状态条件更新分出胜负</span></figcaption>
+      </figure>
+      <div class="flow-notes">
+        <div class="note"><h4>竞态怎么产生</h4>
+          <p>支付回调和延迟队列里的关单任务可能在同一时刻操作同一笔订单，两边都认为订单还是"待支付"。</p></div>
+        <div class="note"><h4>怎么裁决</h4>
+          <p>两条 UPDATE 都带 <code>and status = 0</code>，数据库保证只有一个能影响 1 行，另一个必然 0 行并失败退出。</p></div>
+        <div class="note"><h4>Redis 挂了怎么办</h4>
+          <p>关单不只依赖 Redis 延迟队列 —— 另有每 10 分钟扫库的对账任务补漏，以数据库为准，避免丢条目导致永久漏单。</p></div>
+      </div>
+    </div>
+
+    <div class="panel" id="t3" hidden>
+      <figure class="figure">
+        <div class="fig-scroll">
+          <img src="assets/diagram-lifecycle.png" alt="订单状态机与流转约束图"
+               width="1600" height="594" data-zoom>
+        </div>
+        <figcaption><b>订单状态机与流转约束</b>
+          <span>7 个状态、显式流转表，非法变更在校验层就被拒绝</span></figcaption>
+      </figure>
+      <div class="flow-notes">
+        <div class="note"><h4>状态与终态</h4>
+          <p>待支付 / 已支付 / 已发货 / 已完成 / 已取消 / 退款中 / 已退款；其中已取消、已完成、已退款为终态，不可再流转。</p></div>
+        <div class="note"><h4>流转靠白名单</h4>
+          <p>枚举里用一张 <code>TRANSITIONS</code> 表声明"当前状态允许去向哪些状态"，<code>canTransition</code> 统一校验。</p></div>
+        <div class="note"><h4>退款可撤销</h4>
+          <p>退款中记录原状态，驳回时恢复回已支付或已发货，而不是简单丢弃 —— 回滚路径也是设计过的。</p></div>
+      </div>
+    </div>
+
+    <div class="panel" id="t4" hidden>
+      <figure class="figure">
+        <div class="fig-scroll">
+          <img src="assets/diagram-ai.png" alt="AI 客服对话链路时序图"
+               width="1600" height="590" data-zoom>
+        </div>
+        <figcaption><b>AI 客服对话链路</b>
+          <span>实时数据走工具调用，静态知识走 RAG 检索，SSE 流式回吐</span></figcaption>
+      </figure>
+      <div class="flow-notes">
+        <div class="note"><h4>两条链路分工</h4>
+          <p>库存、订单、优惠券这类实时数据走工具调用查库；菜谱、平台规则这类静态知识走 RAG 检索增强。</p></div>
+        <div class="note"><h4>循环有上限</h4>
+          <p>工具调用循环设 3 轮上限并强制作答，防止模型在工具之间反复横跳造成死循环与超额调用。</p></div>
+        <div class="note"><h4>流式输出</h4>
+          <p>通过 SSE 把回答逐字推给前端，实现打字机效果；服务端需关闭响应缓冲，否则会攒成一坨再返回。</p></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ======================= 功能走查 ======================= -->
+<section class="section" id="shots">
+  <div class="wrap">
+    <div class="eyebrow">功能走查</div>
+    <h2 class="h2">用户端与管理端</h2>
+    <p class="section-lead">
+      用户端覆盖浏览、搜索、购物车、下单、支付、订单与售后；
+      管理端覆盖商品、分类、优惠券、订单发货与数据看板。
+    </p>
+
+    <!-- [阶段2] 四处占位替换为真实截图（截图清单见交付说明） -->
+    <div class="shots">
+      <div class="shot">
+        <div class="ico" aria-hidden="true">🛒</div>
+        <b>用户端 · 首页与食材列表</b>
+        <span>搜索 / 分类 / 分页</span>
+        <span class="todo">截图待补</span>
+      </div>
+      <div class="shot">
+        <div class="ico" aria-hidden="true">📦</div>
+        <b>用户端 · 下单与订单流转</b>
+        <span>购物车 → 结算 → 支付 → 订单详情</span>
+        <span class="todo">截图待补</span>
+      </div>
+      <div class="shot">
+        <div class="ico" aria-hidden="true">📊</div>
+        <b>管理端 · 数据看板</b>
+        <span>销售额 / 订单分布 / 热销 Top5 · ECharts</span>
+        <span class="todo">截图待补</span>
+      </div>
+      <div class="shot">
+        <div class="ico" aria-hidden="true">🧾</div>
+        <b>管理端 · 商品与订单管理</b>
+        <span>增删改 / 图片上传 / 库存预警 / 发货</span>
+        <span class="todo">截图待补</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 工程与安全 ======================= -->
+<section class="section" id="engineering">
+  <div class="wrap">
+    <div class="eyebrow">工程与安全</div>
+    <h2 class="h2">不止"能跑"，还要可维护、可核查</h2>
+    <p class="section-lead">
+      这一层决定代码是"个人练习"还是"别人敢接手"。
+    </p>
+
+    <div class="grid-3">
+      <div class="card panel-card">
+        <h4><span class="ico" aria-hidden="true">🧪</span>测试与质量</h4>
+        <ul class="tick">
+          <li><b>65 个测试类、580+ 用例</b>，JUnit 5 + Mockito + MockMvc，覆盖 Service 与接口层</li>
+          <li><b>Flyway 管理 20 个迁移版本</b>，表结构随应用启动自动演进，不靠手工 SQL</li>
+          <li><b>多环境配置分离</b>，local / prod 各自独立，生产缺失密钥直接启动失败</li>
+          <li><b>springdoc / Swagger UI</b> 生成接口文档，本地环境可直接调试验证</li>
+        </ul>
+      </div>
+
+      <div class="card panel-card">
+        <h4><span class="ico" aria-hidden="true">🔐</span>安全实践</h4>
+        <ul class="tick">
+          <li><b>授权默认拒绝</b>，Spring Security 逐条放行，新增接口不会"忘记加鉴权"</li>
+          <li><b>JWT 无状态认证 + 黑名单吊销</b>，退出登录后旧令牌立即失效</li>
+          <li><b>越权防护</b>：查询一律带 userId 条件，AI 工具的 userId 由服务端注入</li>
+          <li>登录与找回密码 <b>IP 维度限流</b>、密码全量 BCrypt、支付回调 HMAC 验签、上传文件魔数校验</li>
+        </ul>
+      </div>
+
+      <div class="card panel-card">
+        <h4><span class="ico" aria-hidden="true">⚙️</span>工程规范</h4>
+        <ul class="tick">
+          <li><b>DTO 入 / VO 出</b>，实体不进 Controller，接口契约与数据库结构解耦</li>
+          <li><b>构造器注入</b>替代字段注入，依赖关系显式、便于测试</li>
+          <li><b>全局异常处理</b>，业务异常统一转换成标准返回体与错误码</li>
+          <li><b>Docker Compose 一键起</b> MySQL / Redis / 应用，含健康检查与依赖顺序</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 底部 ======================= -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="brand" style="gap:9px">
+          <span class="brand-zh">知食喵</span>
+          <span class="brand-en">Meowlia</span>
+        </div>
+        <p>
+          生鲜电商 &amp; AI 健康咨询平台 · 独立全栈项目<br>
+          Java 后端开发（AI 应用方向）
+        </p>
+      </div>
+      <div class="foot-links">
+        <!-- [阶段3] 代码仓库转 public 后确认此链接可用 -->
+        <a href="https://github.com/AozoraYuzuki/HealthPlatform" target="_blank" rel="noopener">
+          GitHub 代码仓库 ↗
+        </a>
+        <a href="demo/">在线演示 Demo（接入中）</a>
+        <span style="color:#9c8f83;font-size:13px">联系方式请通过招聘平台沟通</span>
+      </div>
+    </div>
+    <p class="foot-note">
+      说明：本页架构图与仓库代码均来自上述项目本身。在线演示为纯前端模拟数据版本，
+      用于展示交互流程，不连接真实后端服务。
+    </p>
+  </div>
+</footer>
+
+<!-- ======================= 灯箱 ======================= -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="放大查看架构图">
+  <button class="close" type="button">关闭 ✕</button>
+  <img src="" alt="">
+</div>
+
+<script>
+/* ============================================================================
+   file:// 兜底
+   ----------------------------------------------------------------------------
+   双击打开时地址是 file://，Demo 点进去只会看到目录列表（浏览器不解析目录
+   index.html），就算解析了 ES Module 也会被 CORS 拦掉。这里主动把话说清楚，
+   并拦下跳转，避免出现"点了没反应/看到一堆文件名"的困惑。
+   ============================================================================ */
+(function () {
+  if (location.protocol !== 'file:') return
+  var warn = document.getElementById('filewarn')
+  if (!warn) return
+  warn.hidden = false
+
+  function flash() {
+    warn.hidden = false
+    warn.classList.remove('is-shake')
+    // 先移除再加，保证连点也能重新触发动画
+    void warn.offsetWidth
+    warn.classList.add('is-shake')
+    warn.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  // 拦下所有指向 Demo 的链接（CTA + 底部那个）
+  document.querySelectorAll('a[href^="demo/"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault()
+      flash()
+    })
+  })
+
+  var closeBtn = warn.querySelector('[data-fw-close]')
+  if (closeBtn) closeBtn.addEventListener('click', function () { warn.hidden = true })
+})()
+
+/* 尚未接入的占位按钮（目前只剩「观看演示视频」，阶段 3 才录）：
+   拦掉跳转，避免评审时点出一个空链接。接入时去掉 aria-disabled 即可。 */
+document.querySelectorAll('[aria-disabled="true"]').forEach(function (el) {
+  el.addEventListener('click', function (e) { e.preventDefault(); });
+});
+
+/* ============================================================================
+   吉祥物（复刻 CatMascot.vue 的行为，原版是 Vue 组件，这里是等价的原生实现）
+   ============================================================================ */
+(function () {
+  var root = document.getElementById('catMascot');
+  if (!root) return;
+  var float = root.querySelector('.cat-float');
+
+  /* 判断浏览器能不能正确播放「带 alpha 的 VP9 / WebM」。
+     canPlayType 在 Firefox 上也会报支持 VP9，但 Firefox 会直接忽略 alpha 通道，
+     把透明区渲染成黑块 —— 所以必须额外把 Firefox / Safari 排掉，退回动画 WebP。 */
+  function canPlayVp9Alpha() {
+    var probe = document.createElement('video');
+    if (!probe.canPlayType || !probe.canPlayType('video/webm; codecs="vp9"')) return false;
+    var ua = navigator.userAgent;
+    if (/firefox|fxios/i.test(ua)) return false;
+    // Safari 的 UA 里也含 "Safari"，但 Chrome/Edge 同样含，所以要先排除它们
+    if (/safari/i.test(ua) && !/chrome|chromium|crios|edg|android/i.test(ua)) return false;
+    return true;
+  }
+
+  var useVideo = canPlayVp9Alpha();
+  var el;
+  if (useVideo) {
+    el = document.createElement('video');
+    el.src = 'assets/cat-idle.webm';
+    el.autoplay = true; el.loop = true; el.muted = true; el.defaultMuted = true;
+    el.preload = 'auto';
+    el.setAttribute('playsinline', '');
+    el.setAttribute('disablepictureinpicture', '');
+  } else {
+    el = document.createElement('img');
+    el.src = 'assets/cat-idle.webp';
+    el.alt = '';
+    el.decoding = 'async';
+    el.draggable = false;
+  }
+  el.className = 'cat-media';
+  float.appendChild(el);
+
+  function markReady() { root.classList.add('is-ready'); }
+  el.addEventListener(useVideo ? 'loadeddata' : 'load', markReady);
+  el.addEventListener('error', markReady);
+  // 素材就绪兜底：网络异常导致事件迟迟不来时，1.5s 后无条件显示
+  setTimeout(markReady, 1500);
+
+  var reduce = typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    // 尊重「减少动态效果」：不跟随鼠标，也不播放（视频停在首帧当作静图）
+    if (useVideo && el.pause) el.pause();
+    markReady();
+    return;
+  }
+  // 个别浏览器即便 muted 也不自动播放，主动 play 一次并吞掉拒绝
+  if (useVideo) requestAnimationFrame(function () { if (el.play) el.play().catch(function () {}); });
+
+  /* 鼠标跟随：以元素中心为原点归一化，rAF 节流避免同帧内反复写样式 */
+  var rafId = 0;
+  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
+  window.addEventListener('mousemove', function (e) {
+    if (rafId) return;
+    rafId = requestAnimationFrame(function () {
+      rafId = 0;
+      var r = root.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var nx = (e.clientX - (r.left + r.width / 2)) / (r.width * 0.9);
+      var ny = (e.clientY - (r.top + r.height / 2)) / (r.height * 0.9);
+      // 鼠标往右 → 角色向右转；鼠标往上 → 微微抬头（rotateX 取负）
+      root.style.setProperty('--ry', (clamp(nx, -1, 1) * 12) + 'deg');
+      root.style.setProperty('--rx', (-clamp(ny, -1, 1) * 9) + 'deg');
+    });
+  }, { passive: true });
+  // 指针离开窗口后回正，避免角色「僵」在倾斜姿态
+  document.addEventListener('mouseleave', function () {
+    root.style.setProperty('--rx', '0deg');
+    root.style.setProperty('--ry', '0deg');
+  });
+
+  /* 点击轻跳：先重置再于下一帧加类，保证连点也能重新触发动画 */
+  var hopTimer = 0;
+  root.addEventListener('click', function () {
+    root.classList.remove('is-hop');
+    requestAnimationFrame(function () { root.classList.add('is-hop'); });
+    clearTimeout(hopTimer);
+    hopTimer = setTimeout(function () { root.classList.remove('is-hop'); }, 640);
+  });
+})();
+
+/* 页签切换 */
+document.querySelectorAll('.tab').forEach(function (tab) {
+  tab.addEventListener('click', function () {
+    document.querySelectorAll('.tab').forEach(function (t) {
+      t.setAttribute('aria-selected', String(t === tab));
+    });
+    document.querySelectorAll('.panel').forEach(function (p) {
+      p.hidden = p.id !== tab.dataset.tab;
+    });
+  });
+});
+
+/* 架构图灯箱 */
+(function () {
+  var box = document.getElementById('lightbox');
+  var boxImg = box.querySelector('img');
+  document.querySelectorAll('img[data-zoom]').forEach(function (img) {
+    img.addEventListener('click', function () {
+      boxImg.src = img.src;
+      boxImg.alt = img.alt;
+      box.classList.add('on');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+  function close() {
+    box.classList.remove('on');
+    boxImg.src = '';
+    document.body.style.overflow = '';
+  }
+  box.addEventListener('click', function (e) {
+    if (e.target === box || e.target.classList.contains('close')) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && box.classList.contains('on')) close();
+  });
+})();
+</script>
+
+</body>
+</html>
