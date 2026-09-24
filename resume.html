@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+  知食喵 · 个人简历页
+  ----------------------------------------------------------------------------
+  与 showcase/index.html 共用同一套设计令牌（「芒果落日 · 墨玉交互」），
+  刻意做成**可打印**的：Ctrl+P 直接导出 PDF，不依赖任何外部文件。
+
+  ⚠️ 联系方式做了反爬处理：静态 HTML 源码里没有完整的手机号/邮箱，
+     只有 data-* 碎片，由页面底部脚本拼装后写入 DOM。
+     这挡不住针对性爬取，但能挡掉绝大多数通用爬虫。
+
+  ⚠️ 待核：项目经历里的单元测试数写的是 580 —— 源码实测值（65 个测试类，
+     排除注释后的 @Test 注解数）。原简历 PDF 上写的是 376，两份必须统一。
+  ============================================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>吴梓淮 · 个人简历 ｜ Java 后端开发（AI 应用方向）</title>
+<meta name="description" content="吴梓淮的个人简历：Java 后端开发 / AI 应用方向，独立完成全栈项目「知食喵 · 生鲜电商 & AI 健康咨询平台」。">
+<meta name="color-scheme" content="light">
+
+<style>
+/* ===== 设计令牌（同 showcase/index.html，取自项目 styles/variables.css）===== */
+:root{
+  --brand-50:#fff8f1;--brand-100:#ffedd5;--brand-200:#fed7aa;--brand-300:#fdba74;
+  --brand-400:#fb923c;--brand-500:#f97316;--brand-600:#c2410c;--brand-700:#9a3412;
+  --brand-800:#7c2d12;--brand-900:#431407;
+  --action-300:#b8a695;--action-600:#1c1917;--action-700:#0f0d0c;
+  --mango-2:#efa9c9;--mango-3:#f9c79b;--mango-4:#f58a2e;
+  --grad-card:linear-gradient(150deg,var(--mango-2) 0%,var(--mango-3) 46%,var(--mango-4) 100%);
+  --tech-50:#eff7fc;--tech-100:#dbeaf6;--tech-600:#0369a1;--tech-700:#075985;
+  --color-surface:#ffffff;--color-bg:#fffdfb;--color-surface-sunken:#fbf3ea;
+  --color-border:#e0b98f;--color-border-soft:#f2ddc6;--color-border-neutral:#eee4da;
+  --color-text:#1c1410;--color-text-sub:#6b5a4c;--color-text-muted:#9c8877;
+  --focus-ring:#c2410c;
+  --radius-md:10px;--radius-lg:16px;
+  --shadow-card:0 2px 10px rgba(28,20,14,.06);
+  --font-brand-zh:'BrandZh','KaiTi','STKaiti',serif;
+  --font-brand-en:'BrandEn','Segoe Script','Brush Script MT',cursive;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',
+              'Microsoft YaHei','Source Han Sans SC',sans-serif;
+  --font-mono:'Cascadia Code','JetBrains Mono',Consolas,monospace;
+}
+@font-face{font-family:'BrandZh';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-zhi.woff2') format('woff2');unicode-range:U+77E5}
+@font-face{font-family:'BrandZh';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-shi.woff2') format('woff2');unicode-range:U+98DF}
+@font-face{font-family:'BrandZh';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-miao.woff2') format('woff2');unicode-range:U+55B5}
+@font-face{font-family:'BrandEn';font-style:normal;font-weight:400;font-display:swap;
+  src:url('assets/brand-en.woff2') format('woff2');unicode-range:U+0020-007E}
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--color-bg);color:var(--color-text);
+  font-family:var(--font-sans);font-size:15.5px;line-height:1.72;
+  -webkit-font-smoothing:antialiased}
+a{color:var(--brand-600);text-decoration:none}
+a:hover{color:var(--brand-700);text-decoration:underline}
+h1,h2,h3,h4{margin:0;line-height:1.3;font-weight:800;letter-spacing:-.01em}
+p{margin:0}
+code{font-family:var(--font-mono);font-size:.88em}
+:focus-visible{outline:2px solid var(--focus-ring);outline-offset:2px;border-radius:4px}
+
+.wrap{max-width:940px;margin:0 auto;padding:0 24px}
+
+/* ===== 顶栏 ===== */
+.nav{position:sticky;top:0;z-index:20;background:rgba(255,253,251,.85);
+  -webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);
+  border-bottom:1px solid var(--color-border-soft)}
+.nav-inner{max-width:940px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:22px}
+.brand{display:flex;align-items:baseline;gap:8px;text-decoration:none}
+.brand-zh{font-family:var(--font-brand-zh);font-size:25px;color:var(--brand-800);line-height:1}
+.brand-en{font-family:var(--font-brand-en);font-size:15px;color:var(--brand-600)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{color:var(--color-text-sub);font-size:14px;font-weight:600;padding:7px 12px;
+  border-radius:8px;text-decoration:none;transition:.16s}
+.nav-links a:hover{color:var(--brand-700);background:var(--brand-50);text-decoration:none}
+.nav-links a.is-active{background:var(--action-600);color:#fff}
+.nav-links a.is-active:hover{background:var(--action-700);color:#fff}
+
+/* ===== 头部名片 ===== */
+.r-head{padding:46px 0 34px;border-bottom:1px solid var(--color-border-neutral)}
+.r-name{font-size:clamp(28px,4vw,38px);margin-bottom:8px}
+.r-title{font-size:16.5px;font-weight:700;color:var(--brand-700);margin-bottom:16px}
+.r-meta{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--color-text-sub);
+  margin-bottom:18px}
+.r-meta span{display:inline-flex;align-items:center;gap:6px}
+.r-meta b{color:var(--color-text);font-weight:600}
+.r-lead{font-size:15.5px;color:var(--color-text-sub);max-width:66ch;
+  border-left:3px solid var(--brand-500);background:var(--brand-50);
+  border-radius:0 var(--radius-md) var(--radius-md) 0;padding:13px 17px}
+.r-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;
+  font-size:14px;font-weight:700;border:1px solid transparent;text-decoration:none;
+  cursor:pointer;font-family:inherit;transition:.18s;box-shadow:var(--shadow-card)}
+.btn:hover{transform:translateY(-1px);text-decoration:none}
+.btn-primary{background:var(--action-600);color:#fff}
+.btn-primary:hover{background:var(--action-700);color:#fff}
+.btn-ghost{background:#fff;color:var(--color-text);border-color:rgba(28,20,14,.16)}
+.btn-ghost:hover{border-color:var(--brand-300);color:var(--brand-700)}
+
+/* ===== 区块 ===== */
+.sec{padding:34px 0;border-bottom:1px solid var(--color-border-neutral)}
+.sec:last-of-type{border-bottom:0}
+.sec-h{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.sec-h::before{content:"";width:20px;height:3px;border-radius:2px;background:var(--brand-500);flex-shrink:0}
+.sec-h h2{font-size:19px}
+
+/* 时间线条目 */
+.entry{padding-left:16px;border-left:2px solid var(--color-border-soft);margin-bottom:20px}
+.entry:last-child{margin-bottom:0}
+.entry-top{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap}
+.entry-top h3{font-size:16px}
+.entry-role{font-size:13.5px;font-weight:700;color:var(--brand-700);margin-top:2px}
+.entry-time{font-size:13px;color:var(--color-text-sub);font-variant-numeric:tabular-nums;
+  white-space:nowrap;font-family:var(--font-mono)}
+.entry-sub{font-size:13.5px;color:var(--color-text-sub);margin-top:3px}
+.entry ul{margin:9px 0 0;padding-left:19px}
+.entry li{margin-bottom:6px;font-size:14.5px}
+.entry li::marker{color:var(--brand-400)}
+.entry li b{color:var(--brand-800)}
+.tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.tag{font-size:11.5px;font-weight:600;color:var(--color-text-sub);background:#fff;
+  border:1px solid var(--color-border-soft);padding:3px 9px;border-radius:999px;
+  font-family:var(--font-mono)}
+.demo-link{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;
+  margin-top:8px}
+
+/* 技能四宫格 */
+.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.skill{background:var(--color-surface);border:1px solid var(--color-border-soft);
+  border-radius:var(--radius-md);padding:15px 17px;box-shadow:var(--shadow-card);
+  border-top:3px solid var(--brand-400)}
+.skill:nth-child(2){border-top-color:var(--mango-4)}
+.skill:nth-child(3){border-top-color:var(--tech-600)}
+.skill:nth-child(4){border-top-color:var(--mango-2)}
+.skill h4{font-size:13.5px;margin-bottom:7px;color:var(--brand-800)}
+.skill p{font-size:13.5px;color:var(--color-text-sub);line-height:1.68}
+
+/* 证书 */
+.certs{margin:0;padding-left:19px}
+.certs li{margin-bottom:6px;font-size:14.5px}
+.certs li::marker{color:var(--brand-400)}
+
+/* 底部 */
+.foot{padding:30px 0 44px;background:var(--action-600);color:#e9e1d9;margin-top:0}
+.foot-inner{max-width:940px;margin:0 auto;padding:0 24px;display:flex;
+  justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.foot .brand-zh{color:#fff}.foot .brand-en{color:var(--brand-300)}
+.foot p{color:#b5a99d;font-size:13.5px;margin-top:10px;max-width:44ch;line-height:1.7}
+.foot a{color:#fff;font-weight:600}
+.foot a:hover{color:var(--brand-300)}
+
+/* 联系方式占位（脚本填充前不显示空白） */
+.pending{color:var(--color-text-muted)}
+
+@media (max-width:700px){
+  .skills{grid-template-columns:1fr}
+  .nav-links a{padding:6px 9px;font-size:13px}
+  .entry-top{flex-direction:column;gap:2px}
+  .wrap{padding:0 18px}
+}
+
+/* ===== 打印：Ctrl+P 直接出 PDF ===== */
+@media print{
+  :root{--shadow-card:none}
+  body{background:#fff;font-size:11.5pt;line-height:1.55}
+  .nav,.r-actions,.foot{display:none!important}
+  .wrap{max-width:none;padding:0}
+  .r-head{padding:0 0 14px}
+  .sec{padding:14px 0;break-inside:avoid}
+  .entry{break-inside:avoid;margin-bottom:12px}
+  .skills{grid-template-columns:repeat(2,1fr);gap:8px}
+  .skill{border:1px solid #ddd;padding:9px 11px;box-shadow:none}
+  .r-lead{background:none;border-left:2px solid #999;padding:6px 11px}
+  .tag{border-color:#ccc}
+  a{color:inherit;text-decoration:none}
+  .demo-link::after{content:" (" attr(href) ")";font-size:9pt;font-weight:400;color:#555}
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= 顶栏 ======================= -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <span class="brand-zh">知食喵</span>
+      <span class="brand-en">Meowlia</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">项目展示</a>
+      <a href="resume.html" class="is-active" aria-current="page">简历</a>
+      <a href="demo/">在线体验</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======================= 头部名片 ======================= -->
+<header class="r-head">
+  <div class="wrap">
+    <h1 class="r-name">吴梓淮</h1>
+    <p class="r-title">Java 后端开发 ｜ AI 应用方向</p>
+
+    <div class="r-meta">
+      <span><b>2001.08</b></span>
+      <span>广东 · 潮州</span>
+      <span>手机：
+        <b class="pending" data-phone-p1="152" data-phone-p2="2097" data-phone-p3="7106">加载中…</b>
+      </span>
+      <span>邮箱：
+        <b class="pending" data-mail-user="3313353791" data-mail-domain="qq.com">加载中…</b>
+      </span>
+    </div>
+
+    <p class="r-lead">
+      独立完成前后端全栈项目「知食喵 · 生鲜电商 &amp; AI 健康咨询平台」——
+      后端 Spring Boot，前端 Vue 3，含自研 AI 客服（工具调用 + RAG 检索）。
+      技术上投入最深的两条线是<strong>订单并发一致性</strong>与<strong>大模型应用的边界控制</strong>。
+    </p>
+
+    <div class="r-actions">
+      <a class="btn btn-primary" href="index.html">← 返回项目展示</a>
+      <button class="btn btn-ghost" type="button" onclick="window.print()">打印 / 存为 PDF</button>
+      <a class="btn btn-ghost" href="demo/">进入在线体验</a>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= 教育背景 ======================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h"><h2>教育背景</h2></div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <h3>五邑大学</h3>
+        <span class="entry-time">2022.09 – 2024.06</span>
+      </div>
+      <p class="entry-sub">交通工程 · 全日制本科 ｜ GPA 3.5 / 4.0</p>
+    </div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <h3>佛山职业技术学院</h3>
+        <span class="entry-time">2019.09 – 2022.06</span>
+      </div>
+      <p class="entry-sub">物联网应用技术 · 全日制专科 ｜ GPA 3.8 / 4.0</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 专业技能 ======================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h"><h2>专业技能</h2></div>
+    <div class="skills">
+      <div class="skill">
+        <h4>后端</h4>
+        <p>Java · Spring Boot · Spring Security · MyBatis · MySQL · Redis · RESTful API · Flyway</p>
+      </div>
+      <div class="skill">
+        <h4>AI 应用</h4>
+        <p>大模型接入（DeepSeek / OpenAI 兼容 API）· Function Calling 工具调用 · RAG 检索增强（关键词 / 向量 / 混合 + RRF 融合）· Embedding 与向量缓存 · SSE 流式输出 · Prompt 工程</p>
+      </div>
+      <div class="skill">
+        <h4>前端</h4>
+        <p>Vue 3 · TypeScript · Pinia · Element Plus · ECharts · Axios</p>
+      </div>
+      <div class="skill">
+        <h4>工程化</h4>
+        <p>Git · Maven · JUnit 5 + Mockito · Swagger / SpringDoc</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 项目经历 ======================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h"><h2>项目经历</h2></div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <h3>知食喵 —— 全民饮食销售 + 健康知识平台</h3>
+        <span class="entry-time">2026.03 – 2026.09</span>
+      </div>
+      <p class="entry-role">全栈项目 · 独立开发</p>
+      <div class="tag-row">
+        <span class="tag">Spring Boot</span><span class="tag">Spring Security + JWT</span>
+        <span class="tag">MyBatis</span><span class="tag">MySQL 8</span><span class="tag">Redis</span>
+        <span class="tag">Flyway</span><span class="tag">Vue 3 + TS</span><span class="tag">Pinia</span>
+        <span class="tag">Element Plus</span><span class="tag">DeepSeek API</span>
+      </div>
+      <ul>
+        <li><b>AI 智能客服：</b>设计「工具调用 + RAG」双通道 —— 实时业务数据（商品 / 库存 / 订单 / 优惠券）走
+          Function Calling，静态知识（菜谱 / 商品 / FAQ）走 RAG；并用实时意图守卫避免两条链路的指令冲突。</li>
+        <li><b>订单并发一致性：</b>用状态机 + 原子条件更新处理「支付回调」与「超时自动关单」的并发竞态；
+          库存扣减设定条件更新防超卖；超时关单基于 Redis ZSET 延迟队列；
+          修复了取消订单漏回补库存导致库存泄露的问题。</li>
+        <li><b>性能与质量：</b>将下单与菜谱一键加购的 N+1 查询重构为「循环外一次 <code>WHERE id IN</code> 批量查 +
+          内存 Map 索引」，SQL 次数由 2N 降为 2；后端 <b>580+ 个单元测试</b>全绿；
+          Spring Security 授权采用 denyAll 兜底 + 按角色逐条放行，密码 BCrypt，
+          敏感字段 <code>@JsonProperty(WRITE_ONLY)</code> 防序列化泄露。</li>
+        <li><b>RAG 检索增强：</b>构建菜谱 / 商品 / FAQ 三类语料，实现关键词、向量、混合三种检索模式；
+          默认混合模式用 RRF（倒数排名融合）合并两路召回排名，避免异量纲分数的人工标定。</li>
+      </ul>
+      <a class="demo-link" href="index.html">
+        ▶ 查看项目详情与在线体验
+      </a>
+    </div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <h3>广东省物联网应用大赛 · 智能家居系统</h3>
+        <span class="entry-time">2021.07 – 2021.10</span>
+      </div>
+      <p class="entry-role">主负责人 · 省级一等奖</p>
+      <div class="tag-row">
+        <span class="tag">Android</span><span class="tag">MQTT</span>
+        <span class="tag">Zigbee / LoRa</span><span class="tag">Java</span>
+      </div>
+      <ul>
+        <li>作为主负责人，负责整体架构与进度拆分，带领团队完成多节点物联网组网；基于 MQTT + Zigbee / LoRa
+          搭建多节点链路，实现环境数据实时上云与设备远程控制。</li>
+        <li><b>软件开发：</b>设计软件界面布局，实现远程控制设备、读取设备数据实时显示；
+          用 Android <code>Handler + Looper</code> 解耦 UI 与网络，配合线程池管理高频设备上报，
+          解决卡顿与丢包。</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <h3>STM32 + K210 多模态智能门禁</h3>
+        <span class="entry-time">2024.03 – 2024.06</span>
+      </div>
+      <p class="entry-role">软硬件一体</p>
+      <div class="tag-row">
+        <span class="tag">STM32</span><span class="tag">K210</span>
+        <span class="tag">YOLOv2</span><span class="tag">OpenCV</span>
+      </div>
+      <ul>
+        <li>K210 边缘部署 YOLOv2，15–20 FPS 人脸检测；5 点定位 + 仿射校正 + 人脸特征比对。</li>
+        <li>GPIO 模拟 IIC 驱动 OLED、PWM 控制舵机，打通嵌入式 + 边缘 AI：
+          人脸 / 指纹 / 密码多模态，含 3 次失败锁定。</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="entry-top">
+        <h3>粤嵌通信科技有限公司</h3>
+        <span class="entry-time">2022.03 – 2022.09</span>
+      </div>
+      <p class="entry-role">开发工程师助理</p>
+      <ul>
+        <li>负责安卓模块「远程控制家居设备」功能的开发。</li>
+        <li>协助将项目拆解为 6 大模块并制定开发计划，交付准时率 100%；
+          执行功能测试与回归验证，跟进 15+ 项缺陷。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 证书与获奖 ======================= -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h"><h2>证书与获奖</h2></div>
+    <ul class="certs">
+      <li>广东省物联网应用技术大赛 · <b>一等奖</b></li>
+      <li>1+X 工业互联网运维 · 初级证书</li>
+      <li>大学英语四级（CET-4）</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 底部 ======================= -->
+<footer class="foot">
+  <div class="foot-inner">
+    <div>
+      <div class="brand" style="gap:8px">
+        <span class="brand-zh">知食喵</span>
+        <span class="brand-en">Meowlia</span>
+      </div>
+      <p>本页与项目展示页共用同一套设计语言；按 Ctrl+P 可直接导出为 PDF。</p>
+    </div>
+    <div>
+      <a href="index.html">← 返回项目展示页</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================================
+   联系方式反爬：静态 HTML 里只有碎片，渲染后才拼成完整值。
+   挡不住针对性爬取，但通用爬虫抓不到明文。
+   ============================================================================ */
+(function () {
+  document.querySelectorAll('[data-phone-p1]').forEach(function (el) {
+    el.textContent = el.dataset.phoneP1 + el.dataset.phoneP2 + el.dataset.phoneP3;
+    el.classList.remove('pending');
+  });
+  document.querySelectorAll('[data-mail-user]').forEach(function (el) {
+    var addr = el.dataset.mailUser + '\u0040' + el.dataset.mailDomain;
+    el.textContent = addr;
+    el.classList.remove('pending');
+  });
+})();
+</script>
+
+</body>
+</html>
