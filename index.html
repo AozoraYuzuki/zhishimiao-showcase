@@ -609,24 +609,19 @@ code,kbd,pre{font-family:var(--font-mono)}
   <div class="wrap hero-grid">
 
     <div>
-      <p class="hero-id">Java 后端开发 · AI 应用方向 · 独立完成前后端全栈落地</p>
-      <h1 class="hero-title">生鲜电商 &amp; <em>AI 健康咨询</em>平台</h1>
+      <p class="hero-id">Java 后端开发 · AI 应用方向</p>
+      <h1 class="hero-title">生鲜电商 &amp; <em>AI 健康科普咨询</em>平台</h1>
 
-      <p class="hero-sub">
-        一个前后端分离的全栈项目：后端 Spring Boot 提供纯 API，前端 Vue 3 独立工程。
-        从数据库设计、接口开发、AI 客服到前端页面，全部由我一人完成。
-      </p>
 
       <div class="stack">
         <span>Spring Boot</span><span>Spring Security / JWT</span><span>MyBatis</span>
         <span>MySQL 8</span><span>Redis</span><span>Flyway</span>
         <span>Vue 3</span><span>TypeScript</span><span>Vite</span>
-        <span>Element Plus</span><span>ECharts</span><span>Docker Compose</span>
+        <span>Element Plus</span><span>ECharts</span>
       </div>
 
       <div class="anchor">
-        <p>一手 AI（工具调用 + RAG + RRF），一手并发（状态机 + 原子条件更新），外面包一层单元测试。</p>
-        <small>项目里投入最深的两条线 —— 也是下面重点展开的部分</small>
+        <p>AI（工具调用 + RAG + RRF），并发（状态机 + 原子条件更新），外面包一层单元测试。</p>
       </div>
 
       <div class="hero-cta">
@@ -644,19 +639,11 @@ code,kbd,pre{font-family:var(--font-mono)}
 
       <div class="hero-meta">
         <span>2026.03 – 2026.09</span><span class="sep">|</span>
-        <span>一人独立开发</span><span class="sep">|</span>
+        <span>独立开发</span><span class="sep">|</span>
         <span>吴梓淮</span>
       </div>
     </div>
 
-    <!--
-      品牌吉祥物：与平台线上跑的是同一个组件（CatMascot.vue）的静态复刻。
-      · 素材：cat-idle.webm（VP9 + alpha，600×600 / 24fps / 120 帧 / 5s 循环）
-      · 兜底：cat-idle.webp（动画 WebP，480×480 / 60 帧）—— 只在浏览器不认
-        WebM alpha 时才请求（Firefox 会把透明区渲染成黑块，Safari 不支持 VP9）
-      · 3D 感：外层 perspective 建透视，内层跟着鼠标做 rotateX / rotateY
-      媒体元素由页面底部脚本按能力注入，避免主流浏览器白白多下一个 1.5MB 兜底包。
-    -->
     <div class="cat-mascot" id="catMascot"
          role="img" aria-label="知食喵吉祥物：一位举着放大镜挑选食材的暹罗猫厨师">
       <div class="cat-floor" aria-hidden="true"></div>
@@ -690,7 +677,7 @@ code,kbd,pre{font-family:var(--font-mono)}
 <!-- ======================= 系统架构 ======================= -->
 <section class="section" id="arch">
   <div class="wrap">
-    <div class="eyebrow">系统架构</div>
+    <div class="eyebrow"><h1>系统架构</h1></div>
     <h2 class="h2">四层分离，依赖单向向下</h2>
     <p class="section-lead">
       以「下单」这条主链路为例，从浏览器发出的请求如何穿过路由守卫、鉴权过滤器、订单事务，
@@ -732,8 +719,7 @@ code,kbd,pre{font-family:var(--font-mono)}
 <!-- ======================= 核心亮点 ======================= -->
 <section class="section" id="highlights">
   <div class="wrap">
-    <div class="eyebrow">核心亮点</div>
-    <h2 class="h2">三件我做得比较深的事</h2>
+    <div class="eyebrow"><h1>核心亮点</h1></div>
     <p class="section-lead">
       每一条都按「问题 → 方案 → 证据」写，证据指向仓库里真实的类与代码。
     </p>
@@ -939,7 +925,7 @@ code,kbd,pre{font-family:var(--font-mono)}
 <!-- ======================= 关键链路 ======================= -->
 <section class="section" id="flows">
   <div class="wrap">
-    <div class="eyebrow">关键链路</div>
+    <div class="eyebrow"><h1>关键链路</h1></div>
     <h2 class="h2">把"一次下单"拆开看</h2>
     <p class="section-lead">
       下面四张图分别回答：请求怎么走完整个链路、钱和超时同时到来时谁说了算、
@@ -1035,12 +1021,12 @@ code,kbd,pre{font-family:var(--font-mono)}
 <!-- ======================= 功能走查 ======================= -->
 <section class="section" id="shots">
   <div class="wrap">
-    <div class="eyebrow">功能走查</div>
+    <div class="eyebrow"><h1>功能走查</h1></div>
     <h2 class="h2">用户端与管理端</h2>
     <p class="section-lead">
       下面的截图来自<strong>真实全栈环境</strong>（前端连后端、数据来自 MySQL），不是
       Demo 的模拟数据。用户端覆盖浏览、搜索、购物车、下单、支付、订单与售后；
-      管理端覆盖商品、分类、优惠券、订单发货与数据看板。
+      管理端覆盖商品、分类、优惠券、订单发货与数据看板。（具体可进入在线体验）
     </p>
 
     <!-- [阶段3] 还差 5 张：食材列表 / 商品详情 / 购物车+结算 / 订单列表 / 数据看板 -->
@@ -1049,7 +1035,7 @@ code,kbd,pre{font-family:var(--font-mono)}
         <img src="assets/shots/01-login.jpg" alt="知食喵登录页" width="1600" height="794" data-zoom>
         <figcaption>
           <b>登录页</b>
-          <span>品牌吉祥物 + JWT 无状态认证入口；演示版可一键体验，不会被注册流程卡住</span>
+          <span>JWT 无状态认证入口；演示版可一键体验，不会被注册流程卡住</span>
         </figcaption>
       </figure>
 
@@ -1070,6 +1056,13 @@ code,kbd,pre{font-family:var(--font-mono)}
       </figure>
 
       <figure class="shot">
+        <img src="assets/shots/06-admin-products.jpg" alt="知食喵管理端商品管理" width="1600" height="792" data-zoom>
+        <figcaption>
+          <b>管理端 · 商品管理</b>
+          <span>增删改 + 上下架 + 库存预警；库存走独立接口写入，不被编辑页的旧快照冲掉</span>
+        </figcaption>
+      </figure>
+      <figure class="shot">
         <img src="assets/shots/04-ai-orders.jpg" alt="AI 客服查询本人订单" width="1600" height="789" data-zoom>
         <figcaption>
           <b>AI 客服 · 查本人订单（工具调用）</b>
@@ -1087,13 +1080,6 @@ code,kbd,pre{font-family:var(--font-mono)}
         </figcaption>
       </figure>
 
-      <figure class="shot">
-        <img src="assets/shots/06-admin-products.jpg" alt="知食喵管理端商品管理" width="1600" height="792" data-zoom>
-        <figcaption>
-          <b>管理端 · 商品管理</b>
-          <span>增删改 + 上下架 + 库存预警；库存走独立接口写入，不被编辑页的旧快照冲掉</span>
-        </figcaption>
-      </figure>
     </div>
   </div>
 </section>
@@ -1101,7 +1087,7 @@ code,kbd,pre{font-family:var(--font-mono)}
 <!-- ======================= 工程与安全 ======================= -->
 <section class="section" id="engineering">
   <div class="wrap">
-    <div class="eyebrow">工程与安全</div>
+    <div class="eyebrow"><h1>工程与安全</h1></div>
     <div class="grid-3">
       <div class="card panel-card">
         <h4><span class="ico" aria-hidden="true">🧪</span>测试与质量</h4>
@@ -1129,7 +1115,6 @@ code,kbd,pre{font-family:var(--font-mono)}
           <li><b>DTO 入 / VO 出</b>，实体不进 Controller，接口契约与数据库结构解耦</li>
           <li><b>构造器注入</b>替代字段注入，依赖关系显式、便于测试</li>
           <li><b>全局异常处理</b>，业务异常统一转换成标准返回体与错误码</li>
-          <li><b>Docker Compose 一键起</b> MySQL / Redis / 应用，含健康检查与依赖顺序</li>
         </ul>
       </div>
     </div>
