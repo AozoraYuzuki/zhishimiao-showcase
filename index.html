@@ -15,7 +15,8 @@
 
   ----------------------------------------------------------------------------
   待接入（阶段 3，见页内 TODO 标记）：
-    1. [阶段3] 功能走查区 4 个截图占位 → 换成真实截图
+    1. [阶段3] 功能走查已有 4 张真实截图（登录 / 首页 / 菜谱详情 / 商品管理），
+       还差 7 张：食材列表、商品详情、购物车+结算、订单列表、AI 客服、数据看板、订单管理
     2. [阶段3] 观看演示视频：录屏完成后把 <span> 换成 <a href="...">
     3. [阶段3] 代码仓库链接：GitHub 仓库转 public 或改指向新的公开仓库
     4. [待核] 数据速览的「580+ 测试用例」应用 `mvnw test` 复核后定稿
@@ -410,22 +411,34 @@ code,kbd,pre{font-family:var(--font-mono)}
 .note p{font-size:13px;color:var(--color-text-sub);line-height:1.65}
 
 /* ==========================================================================
-   10. 功能走查占位
+   10. 功能走查截图
+   --------------------------------------------------------------------------
+   真实截图（非占位）。这里有两条刻意的选择：
+
+   1. **单列全宽**：截图原宽 1600px，双列时每张只能显示到 543px，界面文字
+      基本不可读、必须点开灯箱。单列给到 1110px，不点也能看清。代价是本区块
+      变高约 2.7 倍，但这一节是"整件事真的跑起来了"的证据，值得给足空间。
+
+   2. **不锁宽高比、不裁切**：四张原始比例略有差异（1600×768~794）。
+      若用 object-fit:cover 统一比例，会从底部裁掉内容 —— 实测会把管理端
+      商品表最后一行切掉一半。所以保持 width:100%;height:auto 自然排布。
    ========================================================================== */
-.shots{display:grid;grid-template-columns:repeat(2,1fr);gap:19px;margin-top:30px}
+.shots{display:grid;grid-template-columns:1fr;gap:26px;margin-top:30px}
 .shot{
-  border:1.5px dashed var(--color-border);border-radius:var(--radius-lg);
-  background:linear-gradient(180deg,var(--color-surface) 0%,var(--brand-50) 100%);
-  min-height:214px;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:9px;padding:26px;text-align:center;
+  margin:0;background:var(--color-surface);
+  border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);overflow:hidden;display:flex;flex-direction:column;
+  transition:box-shadow .18s,border-color .18s;
 }
-.shot .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
-  background:rgba(255,255,255,.9);border:1px solid var(--color-border-soft);
-  font-size:19px}
-.shot b{font-size:15px}
-.shot span{font-size:12.5px;color:var(--color-text-sub);font-family:var(--font-mono)}
-.shot .todo{font-size:11.5px;font-weight:700;color:var(--accent-700);
-  background:var(--accent-300);padding:2px 9px;border-radius:999px}
+.shot:hover{box-shadow:var(--shadow-hover);border-color:var(--color-border)}
+.shot img{
+  width:100%;height:auto;display:block;cursor:zoom-in;
+  background:var(--color-surface-sunken);transition:opacity .18s;
+}
+.shot img:hover{opacity:.94}
+.shot figcaption{padding:15px 18px 17px;border-top:1px solid var(--color-border-soft)}
+.shot figcaption b{display:block;font-size:14.5px;margin-bottom:5px;color:var(--color-text)}
+.shot figcaption span{display:block;font-size:13px;line-height:1.62;color:var(--color-text-sub)}
 
 /* ==========================================================================
    11. 工程与安全
@@ -523,7 +536,7 @@ code,kbd,pre{font-family:var(--font-mono)}
   .hero-glow{right:-34%;width:88%}
   .metrics{grid-template-columns:repeat(2,1fr)}
   .layers{grid-template-columns:repeat(2,1fr)}
-  .grid-3,.flow-notes,.shots{grid-template-columns:1fr}
+  .grid-3,.flow-notes{grid-template-columns:1fr}
   .section{padding:62px 0}
 }
 @media (max-width:620px){
@@ -1024,36 +1037,44 @@ code,kbd,pre{font-family:var(--font-mono)}
     <div class="eyebrow">功能走查</div>
     <h2 class="h2">用户端与管理端</h2>
     <p class="section-lead">
-      用户端覆盖浏览、搜索、购物车、下单、支付、订单与售后；
+      下面的截图来自<strong>真实全栈环境</strong>（前端连后端、数据来自 MySQL），不是
+      Demo 的模拟数据。用户端覆盖浏览、搜索、购物车、下单、支付、订单与售后；
       管理端覆盖商品、分类、优惠券、订单发货与数据看板。
     </p>
 
-    <!-- [阶段2] 四处占位替换为真实截图（截图清单见交付说明） -->
+    <!-- [阶段3] 还差 7 张：食材列表 / 商品详情 / 购物车+结算 / 订单列表 / AI 客服 / 数据看板 / 订单管理 -->
     <div class="shots">
-      <div class="shot">
-        <div class="ico" aria-hidden="true">🛒</div>
-        <b>用户端 · 首页与食材列表</b>
-        <span>搜索 / 分类 / 分页</span>
-        <span class="todo">截图待补</span>
-      </div>
-      <div class="shot">
-        <div class="ico" aria-hidden="true">📦</div>
-        <b>用户端 · 下单与订单流转</b>
-        <span>购物车 → 结算 → 支付 → 订单详情</span>
-        <span class="todo">截图待补</span>
-      </div>
-      <div class="shot">
-        <div class="ico" aria-hidden="true">📊</div>
-        <b>管理端 · 数据看板</b>
-        <span>销售额 / 订单分布 / 热销 Top5 · ECharts</span>
-        <span class="todo">截图待补</span>
-      </div>
-      <div class="shot">
-        <div class="ico" aria-hidden="true">🧾</div>
-        <b>管理端 · 商品与订单管理</b>
-        <span>增删改 / 图片上传 / 库存预警 / 发货</span>
-        <span class="todo">截图待补</span>
-      </div>
+      <figure class="shot">
+        <img src="assets/shots/01-login.jpg" alt="知食喵登录页" width="1600" height="794" data-zoom>
+        <figcaption>
+          <b>登录页</b>
+          <span>品牌吉祥物 + JWT 无状态认证入口；演示版可一键体验，不会被注册流程卡住</span>
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/shots/02-home.jpg" alt="知食喵用户端首页" width="1600" height="768" data-zoom>
+        <figcaption>
+          <b>用户端 · 首页</b>
+          <span>菜谱按个人过敏原自动过滤（花生 / 海鲜 / 蛋 / 大豆 / 小麦 / 坚果），右侧栏可换一批</span>
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/shots/03-recipe-detail.jpg" alt="知食喵菜谱详情页" width="1600" height="790" data-zoom>
+        <figcaption>
+          <b>用户端 · 菜谱详情</b>
+          <span>所需食材标注「可购买」项并支持一键加购；烹饪步骤分步展示</span>
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/shots/04-admin-products.jpg" alt="知食喵管理端商品管理" width="1600" height="792" data-zoom>
+        <figcaption>
+          <b>管理端 · 商品管理</b>
+          <span>增删改 + 上下架 + 库存预警；库存走独立接口写入，不被编辑页的旧快照冲掉</span>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -1115,7 +1136,7 @@ code,kbd,pre{font-family:var(--font-mono)}
         <a href="https://github.com/AozoraYuzuki/HealthPlatform" target="_blank" rel="noopener">
           GitHub 代码仓库 ↗
         </a>
-        <a href="demo/">在线演示 Demo（接入中）</a>
+        <a href="demo/">在线演示 Demo（纯前端模拟数据）</a>
         <span style="color:#9c8f83;font-size:13px">联系方式请通过招聘平台沟通</span>
       </div>
     </div>
