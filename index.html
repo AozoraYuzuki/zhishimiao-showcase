@@ -15,8 +15,9 @@
 
   ----------------------------------------------------------------------------
   待接入（阶段 3，见页内 TODO 标记）：
-    1. [阶段3] 功能走查已有 4 张真实截图（登录 / 首页 / 菜谱详情 / 商品管理），
-       还差 7 张：食材列表、商品详情、购物车+结算、订单列表、AI 客服、数据看板、订单管理
+    1. [阶段3] 功能走查已有 6 张真实截图（登录 / 首页 / 菜谱详情 / AI 查订单 /
+       AI 菜谱问答 / 商品管理），还差 5 张：食材列表、商品详情、购物车+结算、
+       订单列表、数据看板
     2. [阶段3] 观看演示视频：录屏完成后把 <span> 换成 <a href="...">
     3. [阶段3] 代码仓库链接：GitHub 仓库转 public 或改指向新的公开仓库
     4. [待核] 数据速览的「580+ 测试用例」应用 `mvnw test` 复核后定稿
@@ -1042,7 +1043,7 @@ code,kbd,pre{font-family:var(--font-mono)}
       管理端覆盖商品、分类、优惠券、订单发货与数据看板。
     </p>
 
-    <!-- [阶段3] 还差 7 张：食材列表 / 商品详情 / 购物车+结算 / 订单列表 / AI 客服 / 数据看板 / 订单管理 -->
+    <!-- [阶段3] 还差 5 张：食材列表 / 商品详情 / 购物车+结算 / 订单列表 / 数据看板 -->
     <div class="shots">
       <figure class="shot">
         <img src="assets/shots/01-login.jpg" alt="知食喵登录页" width="1600" height="794" data-zoom>
@@ -1069,7 +1070,25 @@ code,kbd,pre{font-family:var(--font-mono)}
       </figure>
 
       <figure class="shot">
-        <img src="assets/shots/04-admin-products.jpg" alt="知食喵管理端商品管理" width="1600" height="792" data-zoom>
+        <img src="assets/shots/04-ai-orders.jpg" alt="AI 客服查询本人订单" width="1600" height="789" data-zoom>
+        <figcaption>
+          <b>AI 客服 · 查本人订单（工具调用）</b>
+          <span>问「我的订单到哪了」，模型调用 <code>list_my_orders</code> 查库并以表格返回；
+            追问「24 号那一笔」能接着上文答 —— 工具的 userId 由服务端注入，模型拿不到别人的订单</span>
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/shots/05-ai-recipe.jpg" alt="AI 客服按菜谱作答并提示过敏原" width="1600" height="793" data-zoom>
+        <figcaption>
+          <b>AI 客服 · 菜谱问答（RAG 检索 + 健康画像）</b>
+          <span>答完标出<strong>来源：菜谱「番茄炒蛋」</strong>（检索增强，不是模型编的）；
+            并比对用户的过敏原画像，主动提示「这道菜含蛋，建议谨慎食用」</span>
+        </figcaption>
+      </figure>
+
+      <figure class="shot">
+        <img src="assets/shots/06-admin-products.jpg" alt="知食喵管理端商品管理" width="1600" height="792" data-zoom>
         <figcaption>
           <b>管理端 · 商品管理</b>
           <span>增删改 + 上下架 + 库存预警；库存走独立接口写入，不被编辑页的旧快照冲掉</span>
