@@ -1,1 +1,0 @@
-import{n as e}from"./request-DRjREHKB.js";var t=()=>e.get(`/category/list`),n=()=>e.get(`/category/admin/list`),r=t=>e.post(`/category/admin/add`,t),i=t=>e.put(`/category/admin/update`,t),a=t=>e.delete(`/category/admin/delete/${t}`);export{t as a,i,a as n,n as r,r as t};

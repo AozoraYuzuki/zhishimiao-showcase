@@ -16,12 +16,25 @@
  * 由 src/composables/useIntro.ts 读取。判断只在这里做一次，两侧永远同源 ——
  * 否则会出现"HTML 铺了墨暗底、Vue 却不播入场"，整页闪一下黑，比白屏更糟。
  *
- * ⚠️ 这里刻意不用 ES module 语法（import/export）也不做任何转译：
- *    它要在最早时刻同步执行，越简单越稳。走的是普通 <script>，不是 type=module。
+ * ## ⚠️ 为什么**不再**用 sessionStorage 记忆"已经看过"
+ * 曾经用 sessionStorage 记录"同一次会话只播一次"，结果是：用户刷新首页时
+ * 浏览器保留 sessionStorage，幕布就再也不出现了 —— 而刷新页面在用户心里
+ * 就是"重新进一次首页"，期望看到入场。
+ * 现在改为**每次整页加载都播**：
+ *   · 刷新 → 播 ✓
+ *   · 直接打开链接 / 换标签页 → 播 ✓
+ *   · 站内路由跳转（点导航回首页）→ 不播，因为那是 SPA 内部切换、
+ *     Home 组件复用不会重新执行本脚本
+ * 这个区分正好符合直觉，而且不需要任何存储。
+ *
+ * ## ⚠️ 这里不碰 history.scrollRestoration
+ * 曾经在这写 `history.scrollRestoration = 'manual'` 来绕开"切页后停在页面底部"，
+ * 那是治标：真正的原因是项目缺 vue-router 的 scrollBehavior。
+ * 现在由 src/router/index.ts 的 scrollBehavior 统一处理，这里不再插手 ——
+ * 同一件事不要有两个地方各管一半。
  * ========================================================================== */
 (function () {
   var html = document.documentElement;
-  var KEY = 'zhishimiao:intro-seen';
 
   var reduced =
     window.matchMedia &&
@@ -37,28 +50,19 @@
     ? hash === '#/' || hash === '#'
     : location.pathname === '/' || location.pathname === '';
 
-  var seen = false;
-  try {
-    seen = sessionStorage.getItem(KEY) === '1';
-  } catch (e) {
-    /* 隐私模式等场景读不到，按"没看过"处理 */
-  }
-
   /*
-    强制开关：必须**优先于** seen / isHome 判断。
-    ⚠️ 这里踩过一次：最初把 intro=1 写成"覆盖 seen"，但 play 的表达式里仍然带着
-       !seen —— 于是第一次播完后 sessionStorage 变成 1，intro=1 就再也强制不出来，
-       调试与截图自查全线失效。强制就该是强制：命中就直接 play=true。
+    强制开关：优先级最高。
+    intro=1 强制播（自查用）、intro=0 强制跳过。
   */
   var q = new URLSearchParams(location.search).get('intro');
 
   var play;
   if (q === '1') {
-    play = true; // 强制重播（仅供自查）
+    play = true;
   } else if (q === '0') {
-    play = false; // 强制跳过
+    play = false;
   } else {
-    play = !reduced && isHome && !seen;
+    play = !reduced && isHome;
   }
 
   // 交给 useIntro.ts 读取，保证两侧判断同源
@@ -66,18 +70,13 @@
     play: play,
     isHome: isHome,
     reduced: reduced,
-    seen: seen,
   };
 
   if (play) {
     html.setAttribute('data-intro', 'pending');
-    // 抑制浏览器恢复上次滚动位置：画面期间若页面已滚到中段，
-    // 退场后会"落在页面中间"，看起来像跳了一下
-    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-    window.scrollTo(0, 0);
   } else {
     // 明确不播：打上 skip，让 index.html 内联 CSS 里的暗底规则整体让路。
-    // 非首页 / 已看过 / 减少动态效果 三条路径都走这里，避免闪一下黑。
+    // 非首页 / 减少动态效果 两条路径都走这里，避免闪一下黑。
     html.setAttribute('data-intro-skip', '');
   }
 })();

@@ -1,0 +1,1 @@
+import{ln as e}from"./message-GHwF20P2.js";function t(){if(!arguments.length)return[];var t=arguments[0];return e(t)?t:[t]}export{t};
