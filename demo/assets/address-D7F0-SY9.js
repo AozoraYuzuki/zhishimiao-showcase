@@ -1,0 +1,1 @@
+import{n as e}from"./request-BAV9Rohq.js";var t=()=>e.get(`/user/address/list`),n=t=>e.post(`/user/address/add`,t),r=t=>e.put(`/user/address/update`,t),i=t=>e.put(`/user/address/${t}/default`),a=t=>e.delete(`/user/address/${t}`);export{r as a,i,a as n,t as r,n as t};
