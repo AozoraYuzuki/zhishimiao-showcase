@@ -1,1 +1,0 @@
-import{n as e}from"./request-CIsW1m0m.js";var t=()=>e.get(`/user/favorite/list`),n=t=>e.get(`/user/favorite/status/${t}`),r=t=>e.post(`/user/favorite/${t}`),i=t=>e.delete(`/user/favorite/${t}`);export{i,t as n,n as r,r as t};

@@ -1,0 +1,1 @@
+import{n as e}from"./request-DRjREHKB.js";var t=()=>e.get(`/coupon/list`),n=()=>e.get(`/coupon/user/list`),r=t=>e.post(`/coupon/claim/${t}`),i=()=>e.get(`/coupon/admin/list`),a=t=>e.post(`/coupon/admin/add`,t),o=t=>e.put(`/coupon/admin/update`,t),s=t=>e.delete(`/coupon/admin/delete/${t}`);export{r as a,o as i,s as n,t as o,i as r,n as s,a as t};

@@ -1,1 +1,0 @@
-import{Dn as e}from"./message-BF4iaij0.js";var t=`update:modelValue`,n=`change`,r=`input`,i=t=>e?window.requestAnimationFrame(t):setTimeout(t,16),a=t=>e?window.cancelAnimationFrame(t):clearTimeout(t);export{t as a,r as i,i as n,n as r,a as t};
