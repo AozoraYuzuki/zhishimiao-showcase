@@ -1,0 +1,1 @@
+import{n as e}from"./request-CIsW1m0m.js";var t=()=>e.get(`/recipe/list`),n=t=>e.get(`/recipe/${t}`),r=t=>e.post(`/recipe/${t}/add-to-cart`);export{n,t as r,r as t};

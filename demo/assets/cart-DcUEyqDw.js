@@ -1,1 +1,0 @@
-import{n as e}from"./request-BAV9Rohq.js";var t=()=>e.get(`/cart/list`),n=t=>e.post(`/cart/add`,t),r=(t,n)=>e.put(`/cart/${t}/quantity`,{quantity:n}),i=t=>e.delete(`/cart/delete/${t}`);export{r as i,i as n,t as r,n as t};
