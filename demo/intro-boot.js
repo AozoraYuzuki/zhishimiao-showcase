@@ -44,11 +44,21 @@
     路由前缀：Demo 走 hash 路由（/#/），正常构建走 history（/）。
     只有落在首页才播入场 —— 直接进 /recipes 或菜品详情时给用户盖一层品牌画面
     属于打扰，不是仪式感。
+
+    ⚠️ 首页判定必须兼容"演示构建挂在子目录"这件事。
+       展示页的主 CTA 写的是 `href="demo/"`，也就是说**从入口链接进来时 URL 里还没有 hash**，
+       而 pathname 是 `/zhishimiao-showcase/demo/` 而不是 `/`。
+       原来只判 `pathname === '/'`，线上 Demo 因此**永远不播入场**；
+       而本地 dev 的 pathname 恰好就是 `/`，所以怎么看都是好的 —— 典型的"只在线上爆"。
+    规则：没有 hash 时，只要 pathname 指向一个**目录根**（以 / 结尾，或就是 index.html）就算首页。
+       · history 正常构建：'/' → 首页 ✓，'/recipes' → 不是 ✓
+       · 演示构建子目录：'/demo/' → 首页 ✓，'/demo/index.html' → 首页 ✓
   */
   var hash = location.hash;
+  var path = location.pathname.replace(/index\.html$/, '');
   var isHome = hash
     ? hash === '#/' || hash === '#'
-    : location.pathname === '/' || location.pathname === '';
+    : path === '' || path === '/' || /\/$/.test(path);
 
   /*
     强制开关：优先级最高。
