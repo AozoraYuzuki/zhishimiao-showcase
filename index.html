@@ -1,41 +1,11 @@
 <!DOCTYPE html>
-<!--
-  ============================================================================
-  知食喵 · 项目展示页
-  ----------------------------------------------------------------------------
-  独立单页，零依赖、零构建、可离线双击打开。视觉语言完全复用知食喵前端自身的
-  设计令牌（src/styles/variables.css「芒果落日 · 墨玉交互」），因此本页与
-  阶段 2 的 mock Demo 界面能无缝衔接。
-
-  ⚠️ 本页遵守 variables.css 里那四条对比度铁律：
-     · 亮芒果(brand-400/500) 绝不承白字 —— 只作底 + 配深墨字
-     · 氛围渐变只作背景，其上不承载正文（hero 的光晕只在吉祥物那一侧）
-     · --color-text-muted(#9c8877 仅 3.34:1) 只用于装饰，不承载需阅读的信息
-     · 承载文字的容器一律是实底（白卡 / 墨玉 / 深色代码块）
-
-  ----------------------------------------------------------------------------
-  待接入（阶段 3，见页内 TODO 标记）：
-    1. [阶段3] 功能走查已有 6 张真实截图（登录 / 首页 / 菜谱详情 / AI 查订单 /
-       AI 菜谱问答 / 商品管理），还差 5 张：食材列表、商品详情、购物车+结算、
-       订单列表、数据看板
-    2. [阶段3] 观看演示视频：录屏完成后把 <span> 换成 <a href="...">
-    3. [阶段3] 代码仓库链接：GitHub 仓库转 public 或改指向新的公开仓库
-    4. [待核] 数据速览的「580+ 测试用例」应用 `mvnw test` 复核后定稿
-
-  ⚠️ 主 CTA「进入在线体验」指向同级的 `demo/`。这要求部署成下面这个布局
-     （`..\assemble-pages.ps1` 会自动组装出来，不要单独发 showcase/ 目录）：
-        <站点根>/
-        ├── index.html        ← 本文件
-        ├── assets/           ← 本页的图与字体
-        └── demo/             ← vegetable-shop-frontend/dist-demo/ 的全部内容
-  ============================================================================
--->
+<!-- 本页源文件。运行 assemble-pages.ps1 组装展示页和静态Demo；本批只输出本地预览，不发布。 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>知食喵 · 生鲜电商 &amp; AI 健康咨询平台 | 吴梓淮</title>
-<meta name="description" content="Java 后端 + AI 应用方向的独立全栈项目：工具调用 + RAG 三模式检索 + RRF 融合，状态机 + 原子条件更新解决订单并发一致性。25,000 行代码，580+ 单元测试。">
+<title>知食喵｜生鲜商城与智能客服系统 · Java后端实战</title>
+<meta name="description" content="Java后端实战项目：交易一致性、Outbox与RabbitMQ订单事件、Spring AI只读工具和人工接管。交互Demo使用模拟数据，不连接真实后端或模型。">
 <meta name="color-scheme" content="light">
 
 <style>
@@ -332,7 +302,7 @@ code,kbd,pre{font-family:var(--font-mono)}
 .layer p{font-size:13px;color:var(--color-text-sub);line-height:1.6}
 
 /* 图容器 */
-.figure{margin-top:26px;background:var(--color-surface);
+.figure{margin:26px 0 0;background:var(--color-surface);
   border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);
   padding:13px;box-shadow:var(--shadow-card);overflow:hidden}
 .figure img{width:100%;border-radius:var(--radius-md);background:#fff;cursor:zoom-in;
@@ -424,7 +394,8 @@ code,kbd,pre{font-family:var(--font-mono)}
       若用 object-fit:cover 统一比例，会从底部裁掉内容 —— 实测会把管理端
       商品表最后一行切掉一半。所以保持 width:100%;height:auto 自然排布。
    ========================================================================== */
-.shots{display:grid;grid-template-columns:1fr;gap:26px;margin-top:30px}
+.shots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:30px}
+#knowledge-shot{grid-column:1/-1}
 .shot{
   margin:0;background:var(--color-surface);
   border:1px solid var(--color-border-soft);border-radius:var(--radius-lg);
@@ -537,7 +508,7 @@ code,kbd,pre{font-family:var(--font-mono)}
   .hero-glow{right:-34%;width:88%}
   .metrics{grid-template-columns:repeat(2,1fr)}
   .layers{grid-template-columns:repeat(2,1fr)}
-  .grid-3,.flow-notes{grid-template-columns:1fr}
+  .grid-3,.flow-notes,.shots{grid-template-columns:1fr}
   .section{padding:62px 0}
 }
 @media (max-width:620px){
@@ -568,23 +539,18 @@ code,kbd,pre{font-family:var(--font-mono)}
   *{transition:none!important;animation:none!important}
   html{scroll-behavior:auto}
 }
+.demo-notice{margin-top:18px;color:var(--color-text-sub);font-size:14px;max-width:620px}
+.metric b{font-size:clamp(21px,2.5vw,28px)}.metric i{color:var(--color-text-sub);font-size:12px}
+.evidence{overflow-wrap:anywhere}.panel[hidden]{display:none}
+.shot-portrait img{height:420px;width:100%;object-fit:contain;object-position:top;background:var(--color-bg-soft)}
+img[data-zoom]:focus-visible{outline:3px solid var(--focus-ring);outline-offset:3px}
+.eyebrow h2{font-size:inherit;margin:0}
 </style>
 </head>
 <body>
 
 <!-- 「用文件方式打开」警告：默认隐藏，仅当协议是 file: 时由脚本显示 -->
-<div class="filewarn" id="filewarn" hidden role="alert">
-  <b>⚠️ 检测到你是用「文件方式」打开的，在线体验点不进去</b>
-  <span>
-    双击 HTML 得到的地址是 <code>file://</code>。浏览器在这种协议下①不会把目录解析成
-    <code>index.html</code>（所以点进去只看到目录列表），②会拦掉 Demo 用到的 ES Module。
-    <br>
-    请改用本地服务打开：在仓库根目录<strong>双击 <code>preview-pages.cmd</code></strong>，
-    或执行 <code>python -m http.server 4300 --directory pages</code> 后访问
-    <code>http://localhost:4300/</code>。
-  </span>
-  <button class="close" type="button" data-fw-close aria-label="关闭提示">✕</button>
-</div>
+<div class="filewarn" id="filewarn" hidden role="alert"><b>请通过本地预览链接打开</b><span>双击HTML使用file协议，不能正常运行Demo。请使用交付的HTTP预览地址。</span><button class="close" data-fw-close aria-label="关闭提示">×</button></div>
 
 <!-- ======================= 顶栏 ======================= -->
 <nav class="nav">
@@ -598,7 +564,6 @@ code,kbd,pre{font-family:var(--font-mono)}
       <a href="#highlights">核心亮点</a>
       <a href="#flows">关键链路</a>
       <a href="#shots">功能走查</a>
-      <a href="#engineering">工程与安全</a>
       <a href="resume.html">个人简历</a>
     </div>
   </div>
@@ -608,552 +573,73 @@ code,kbd,pre{font-family:var(--font-mono)}
 <header class="hero" id="top">
   <div class="hero-glow" aria-hidden="true"></div>
   <div class="wrap hero-grid">
-
     <div>
       <p class="hero-id">Java 后端开发 · AI 应用方向</p>
-      <h1 class="hero-title">生鲜电商 &amp; <em>AI 健康科普咨询</em>平台</h1>
-
-
-      <div class="stack">
-        <span>Spring Boot</span><span>Spring Security / JWT</span><span>MyBatis</span>
-        <span>MySQL 8</span><span>Redis</span><span>Flyway</span>
-        <span>Vue 3</span><span>TypeScript</span><span>Vite</span>
-        <span>Element Plus</span><span>ECharts</span>
-      </div>
-
-      <div class="anchor">
-        <p>AI（工具调用 + RAG + RRF），并发（状态机 + 原子条件更新），外面包一层单元测试。</p>
-      </div>
-
-      <div class="hero-cta">
-        <!-- 阶段 2 已接入：指向同级的 demo/（纯静态 mock 版商城，无需后端） -->
-        <a class="btn btn-primary" href="demo/">
-          进入在线体验
-          <span aria-hidden="true">→</span>
-        </a>
-        <!-- [阶段3] 录屏完成后：把 <span> 换成 <a href="视频地址"> 即可 -->
-        <span class="btn btn-ghost" aria-disabled="true">
-          观看演示视频
-          <span class="chip chip-inline">待录制</span>
-        </span>
-      </div>
-
-      <div class="hero-meta">
-        <span>2026.03 – 2026.09</span><span class="sep">|</span>
-        <span>独立开发</span><span class="sep">|</span>
-        <span>吴梓淮</span>
-      </div>
+      <h1 class="hero-title">知食喵｜生鲜商城与<em>智能客服系统</em></h1>
+      <div class="stack"><span>Java</span><span>Spring Boot</span><span>MySQL</span><span>Redis</span><span>RabbitMQ</span><span>Spring AI</span><span>Vue 3</span></div>
+      <div class="anchor"><p>围绕订单交易一致性、订单事件异步处理和受控 AI 客服，建设可解释、可测试的业务链路。</p></div>
+      <div class="hero-cta"><a class="btn btn-primary" href="demo/">体验交互 Demo <span aria-hidden="true">→</span></a><a class="btn btn-ghost" href="#highlights">查看核心实现</a></div>
+      <p class="demo-notice"><strong>模拟数据，不连接真实后端或模型。</strong>下单、支付和 AI 回答仅展示交互，不代表真实资金操作或模型效果。</p>
+      <div class="hero-meta"><span>2026.03—至今</span><span class="sep">|</span><span>个人实战项目</span><span class="sep">|</span><span>吴梓淮</span></div>
     </div>
-
-    <div class="cat-mascot" id="catMascot"
-         role="img" aria-label="知食喵吉祥物：一位举着放大镜挑选食材的暹罗猫厨师">
-      <div class="cat-floor" aria-hidden="true"></div>
-      <div class="cat-stage">
-        <div class="cat-float">
-          <div class="cat-bubble" aria-hidden="true">喵～ 今天想吃点啥？</div>
-        </div>
-      </div>
+    <div class="cat-mascot" id="catMascot" role="img" aria-label="知食喵吉祥物：举着放大镜挑选食材的暹罗猫厨师">
+      <div class="cat-floor" aria-hidden="true"></div><div class="cat-stage"><div class="cat-float"><div class="cat-bubble" aria-hidden="true">喵～ 今天想吃点啥？</div></div></div>
     </div>
-
   </div>
 </header>
-
-<!-- ======================= 数据速览 ======================= -->
-<section class="section" id="metrics" style="padding-top:0">
-  <div class="wrap">
-    <!-- [待核] 580 为 @Test 注解实测数；请跑一次 mvnw test 复核后定稿 -->
-    <div class="metrics">
-      <div class="metric"><b>25,000</b><span>行全栈代码</span>
-        <i>Java 11,881 · 前端 13,133</i></div>
-      <div class="metric"><b>580+</b><span>单元测试用例</span>
-        <i>65 个测试类</i></div>
-      <div class="metric"><b>20</b><span>数据库迁移版本</span>
-        <i>Flyway V1 – V20 全自动建表</i></div>
-      <div class="metric"><b>59</b><span>Controller / Service</span>
-        <i>14 控制器 · 45 服务类</i></div>
-    </div>
-  </div>
-</section>
+<section class="section" id="metrics" style="padding-top:0" aria-label="业务能力概览"><div class="wrap"><div class="metrics">
+  <div class="metric"><b>交易一致性</b><span>事务 · 行锁 · 状态校验</span><i>支付为模拟协议</i></div>
+  <div class="metric"><b>订单事件</b><span>Outbox · RabbitMQ · 幂等</span><i>至少一次投递，允许重试</i></div>
+  <div class="metric"><b>受控客服</b><span>会话 · 只读工具 · 取消</span><i>工具权限由服务端校验</i></div>
+  <div class="metric"><b>知识与人工</b><span>发布回滚 · 来源 · 工单</span><i>来源可追溯，不等于事实核验</i></div>
+</div></div></section>
 
 <!-- ======================= 系统架构 ======================= -->
-<section class="section" id="arch">
-  <div class="wrap">
-    <div class="eyebrow"><h1>系统架构</h1></div>
-    <h2 class="h2">四层分离，依赖单向向下</h2>
-    <p class="section-lead">
-      以「下单」这条主链路为例，从浏览器发出的请求如何穿过路由守卫、鉴权过滤器、订单事务，
-      最终落到 MySQL 与 Redis。所有状态变更都在 Service 层收口，Controller 不碰业务规则。
-    </p>
-
-    <figure class="figure" style="margin-top:30px">
-      <div class="fig-scroll">
-        <img src="assets/diagram-architecture.png" alt="知食喵全栈业务架构与分层依赖图"
-             width="1600" height="562" data-zoom>
-      </div>
-      <figcaption>
-        <b>全栈架构与分层依赖</b>
-        <span>点击图片可放大查看</span>
-      </figcaption>
-    </figure>
-
-    <div class="layers">
-      <div class="layer">
-        <h4>前端应用层</h4>
-        <p>路由守卫与鉴权状态（Pinia store）统一判定；axios 拦截器集中注入 token、处理 401/403。</p>
-      </div>
-      <div class="layer">
-        <h4>接入 / 鉴权层</h4>
-        <p>Vite 代理转发；Spring Security 过滤器链校验 JWT，解析出 userId 与角色写入上下文。</p>
-      </div>
-      <div class="layer">
-        <h4>订单服务层 · 核心事务</h4>
-        <p>购物车校验与去重、优惠券锁单核销、订单创建 —— 整个流程包在一个事务里。</p>
-      </div>
-      <div class="layer">
-        <h4>数据与存储层</h4>
-        <p>MyBatis 注解版数据访问；MySQL 8 主库持久化；Redis 承担缓存、延迟队列与限流。</p>
-      </div>
-    </div>
+<section class="section" id="arch"><div class="wrap">
+  <div class="eyebrow"><h2>系统架构</h2></div><h3 class="h2">单体应用，两条重点链路</h3>
+  <p class="section-lead">订单核心写入由 MySQL 事务负责；提交后的缓存与关单副作用经 Outbox 和 RabbitMQ 异步处理。客服由 Spring AI 编排，只读工具独立鉴权，会话、生成和人工记录分别保存。</p>
+  <figure class="figure"><div class="fig-scroll"><img src="assets/diagram-architecture.svg" alt="单体应用架构：交易事务、Outbox投递和Spring AI客服分支" width="1200" height="660" data-zoom></div><figcaption><b>系统架构与责任边界</b><span>点击或键盘打开大图；窄屏可横向滚动。</span></figcaption></figure>
+  <div class="layers">
+    <div class="layer"><h4>接入与权限</h4><p>Vue 3 页面与 POST SSE；Spring Security 认证、角色与资源归属校验。</p></div>
+    <div class="layer"><h4>交易与消息</h4><p>订单／支付独立服务，核心写入顺序执行；Outbox短事务领取后等待MQ确认。</p></div>
+    <div class="layer"><h4>客服与知识</h4><p>ChatClient、Advisor、只读 @Tool；历史与上下文分离，知识版本与来源快照可追溯。</p></div>
+    <div class="layer"><h4>存储与协调</h4><p>MySQL保存业务事实和客服记录；Redis缓存、限流与生成协调；RabbitMQ传递订单事件。</p></div>
   </div>
-</section>
+</div></section>
 
 <!-- ======================= 核心亮点 ======================= -->
-<section class="section" id="highlights">
-  <div class="wrap">
-    <div class="eyebrow"><h1>核心亮点</h1></div>
-    <p class="section-lead">
-      每一条都按「问题 → 方案 → 证据」写，证据指向仓库里真实的类与代码。
-    </p>
-
-    <div class="highlights">
-
-      <!-- 亮点 1 -->
-      <article class="card card-pad hl">
-        <div class="hl-head">
-          <div class="hl-no">1</div>
-          <div>
-            <h3 class="hl-title">AI 工具不可能被诱导越权</h3>
-            <p class="hl-tagline">大模型能伪造参数，但不该能伪造身份</p>
-          </div>
-        </div>
-        <div class="hl-body">
-          <dl>
-            <div class="hl-row">
-              <dt>问题</dt>
-              <dd>
-                AI 客服挂了 <span class="kbd">list_my_orders</span>、<span class="kbd">list_my_coupons</span>
-                这类"查我自己数据"的工具。如果 <strong>userId 由模型传参</strong>，用户只要在对话里说
-                "帮我查一下 1002 号用户的订单"，模型就可能照做 —— 变成一条绕过鉴权的越权通道。
-              </dd>
-            </div>
-            <div class="hl-row">
-              <dt>方案</dt>
-              <dd>
-                工具签名里<strong>根本没有 userId 参数</strong>，它由服务端从登录态注入，模型能控制的只有业务参数
-                （关键词、分页等）。同时维护工具白名单，非白名单工具直接拒绝并记警告日志。
-              </dd>
-            </div>
-            <div class="hl-row">
-              <dt>证据</dt>
-              <dd>
-                <code>service/ai/AiToolRegistry.java</code> —— 工具执行入口的签名即
-                <span class="kbd">execute(Integer userId, String name, String argsJson)</span>，
-                userId 不在模型可控的 <span class="kbd">argsJson</span> 里。
-              </dd>
-            </div>
-          </dl>
-
-          <div class="code">
-            <div class="code-head">
-              <span>AiToolRegistry.java</span>
-              <span class="f">工具注册与执行</span>
-            </div>
-<pre><code><span class="cm">// 工具签名里没有 userId —— 模型无法伪造，天然防越权</span>
-<span class="st">"list_my_orders"</span>,  (userId, args) -&gt; safe(() -&gt; <span class="fn">listMyOrders</span>(orderService, userId)),
-<span class="st">"list_my_coupons"</span>, (userId, args) -&gt; safe(() -&gt; <span class="fn">listMyCoupons</span>(couponService, userId)),
-
-<span class="kw">public</span> String <span class="fn">execute</span>(Integer userId, String name, String argsJson) {
-    <span class="kw">if</span> (!HANDLERS.containsKey(name)) {
-        log.warn(<span class="st">"[aiTool] 拒绝非白名单工具：user={} tool={}"</span>, userId, name);
-        <span class="kw">return</span> errorJson(<span class="st">"不允许的工具"</span>);
-    }
-    <span class="cm">// userId 由调用方（服务端）传入，不经过模型</span>
-    <span class="kw">return</span> HANDLERS.get(name).apply(userId, argsJson);
-}</code></pre>
-          </div>
-
-          <div class="evidence">
-            <span>service/ai/AiToolRegistry.java</span>
-            <span>service/ai/KnowledgeRetriever.java</span>
-            <span>controller/AiController.java</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- 亮点 2 -->
-      <article class="card card-pad hl">
-        <div class="hl-head">
-          <div class="hl-no">2</div>
-          <div>
-            <h3 class="hl-title">订单并发一致性：状态机 + 原子条件更新</h3>
-            <p class="hl-tagline">支付回调和超时关单同时改一个订单，谁赢由数据库裁决</p>
-          </div>
-        </div>
-        <div class="hl-body">
-          <dl>
-            <div class="hl-row">
-              <dt>问题</dt>
-              <dd>
-                用户点支付的瞬间，超时关单任务可能也在跑，两个线程同时读到订单是"待支付"。
-                如果用<strong>"先查再改"</strong>，两边都会判定合法、双双写成功 ——
-                <strong>结果就是已支付的订单被误关</strong>，用户付了钱订单却取消了。
-              </dd>
-            </div>
-            <div class="hl-row">
-              <dt>方案</dt>
-              <dd>
-                状态机的每条合法流转都对应一条<strong>自带"当前状态"条件的原子 UPDATE</strong>，
-                靠<strong>影响行数</strong>判断胜负：0 行说明状态已被别人改过，本次操作直接失败。
-                库存同理，用 <span class="kbd">stock &gt;= qty</span> 条件更新防超卖。
-              </dd>
-            </div>
-            <div class="hl-row">
-              <dt>证据</dt>
-              <dd>
-                <code>mapper/OrderMapper.java</code> 里 7 条流转方法（markPaid / markShipped /
-                markFinished / markCancelled / markRefunding / markRefunded / markRefundRejected），
-                每条 SQL 都带状态条件。
-              </dd>
-            </div>
-          </dl>
-
-          <div class="code">
-            <div class="code-head">
-              <span>OrderMapper.java · ProductMapper.java</span>
-              <span class="f">条件更新</span>
-            </div>
-<pre><code><span class="cm">-- 支付：只有当前确实是"待支付"才更新；已被超时关单则影响 0 行</span>
-<span class="kw">update</span> orders <span class="kw">set</span> status = 1, pay_time = now()
-<span class="kw">where</span> id = #{id} <span class="kw">and</span> status = 0
-
-<span class="cm">-- 超时关单：同样要求当前必须是"待支付"</span>
-<span class="kw">update</span> orders <span class="kw">set</span> status = 4, cancel_time = now()
-<span class="kw">where</span> id = #{id} <span class="kw">and</span> status = 0
-
-<span class="cm">-- 扣库存：条件里带 stock &gt;= qty，从 SQL 层面堵死超卖</span>
-<span class="kw">update</span> tb_product
-   <span class="kw">set</span> stock = stock - #{quantity}
- <span class="kw">where</span> id = #{productId}
-   <span class="kw">and</span> stock &gt;= #{quantity}</code></pre>
-          </div>
-
-          <div class="evidence">
-            <span>mapper/OrderMapper.java</span>
-            <span>mapper/ProductMapper.java</span>
-            <span>service/OrderServiceImpl.java</span>
-            <span>service/StockService.java</span>
-            <span>enums/OrderStatus.java</span>
-          </div>
-        </div>
-      </article>
-
-      <!-- 亮点 3 -->
-      <article class="card card-pad hl">
-        <div class="hl-head">
-          <div class="hl-no">3</div>
-          <div>
-            <h3 class="hl-title">RAG 三模式检索 + RRF 排名融合</h3>
-            <p class="hl-tagline">两路召回的量纲完全不同，所以只用排名、不用分数</p>
-          </div>
-        </div>
-        <div class="hl-body">
-          <dl>
-            <div class="hl-row">
-              <dt>问题</dt>
-              <dd>
-                纯关键词检索召回差 —— 用户换个说法就搜不到；纯向量检索对精确词（菜名、规格）又不准。
-                而两路分数<strong>量纲完全不同</strong>：关键词是整数权重累加，向量是 0~1 余弦相似度。
-                直接加权求和得靠人工标定缩放系数，语料一变就失准。
-              </dd>
-            </div>
-            <div class="hl-row">
-              <dt>方案</dt>
-              <dd>
-                实现关键词（中文 2-gram + 标题加权）、向量（余弦相似度）、混合三种检索模式；
-                混合模式默认用 <strong>RRF 倒数排名融合</strong> —— 只看排名不看分数，
-                天然免标定、对分数分布不敏感。另带降级链：向量不可用时自动退回关键词检索。
-              </dd>
-            </div>
-            <div class="hl-row">
-              <dt>证据</dt>
-              <dd>
-                <code>service/ai/rag/RankFusion.java</code> ——
-                <span class="kbd">score(d) = Σ 1/(k + rank_i(d))</span>，平滑常数 k 默认 60。
-              </dd>
-            </div>
-          </dl>
-
-          <div class="code">
-            <div class="code-head">
-              <span>RankFusion.java</span>
-              <span class="f">reciprocalRankFusion</span>
-            </div>
-<pre><code><span class="cm">// 只需排名，不需要跨路校准分数 —— 关键词与向量分数不同量纲也能融合</span>
-<span class="kw">for</span> (List&lt;String&gt; ranked : rankedLists) {
-    <span class="kw">int</span> rank = 1;
-    <span class="kw">for</span> (String id : ranked) {
-        <span class="cm">// RRF：同一片段在多路出现则得分累加</span>
-        fused.merge(id, 1d / (smooth + rank), Double::sum);
-        rank++;
-    }
-}</code></pre>
-          </div>
-
-          <div class="evidence">
-            <span>service/ai/rag/RankFusion.java</span>
-            <span>service/ai/rag/TextTokenizer.java</span>
-            <span>service/ai/rag/VectorIndex.java</span>
-            <span>service/ai/rag/EmbeddingStore.java</span>
-            <span>config/AiRagConfig.java</span>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
+<section class="section" id="highlights"><div class="wrap"><div class="eyebrow"><h2>核心亮点</h2></div><p class="section-lead">从业务故障出发说明实现和限制；没有把开发目标写成上线结果。</p><div class="highlights">
+<article class="card card-pad hl"><div class="hl-head"><div class="hl-no">1</div><div><h3 class="hl-title">支付与关单竞争</h3><p class="hl-tagline">支付事实落库，合法重复通知幂等受理</p></div></div><div class="hl-body"><dl><div class="hl-row"><dt>问题</dt><dd>支付回调与超时关单可能同时操作订单；Redis凭证丢失不能被当作已经处理。</dd></div><div class="hl-row"><dt>方案</dt><dd>支付记录保存至MySQL；独立Spring Bean开启事务，统一先锁订单再锁支付记录。支付结果和订单状态同事务提交，未知支付单与非法签名明确拒绝。</dd></div><div class="hl-row"><dt>边界</dt><dd>模拟支付，未接入支付机构。订单已关闭或通知过期时保存待核查记录，不重新打开订单、不自动退款。</dd></div></dl><div class="evidence"><span>实现入口</span><span>service/payment/PaymentService.java</span><span>service/payment/PaymentSigner.java</span></div></div></article>
+<article class="card card-pad hl"><div class="hl-head"><div class="hl-no">2</div><div><h3 class="hl-title">订单事件异步处理</h3><p class="hl-tagline">Outbox + RabbitMQ，失败可重试，重复可处理</p></div></div><div class="hl-body"><dl><div class="hl-row"><dt>问题</dt><dd>订单提交后直接访问Redis可能失败，造成订单已成功但接口报错，或后续处理任务丢失。</dd></div><div class="hl-row"><dt>方案</dt><dd>订单和ORDER_CREATED事件同事务保存；领取租约后发送，broker ACK且未退回才标SENT。失败退避重试，旧领取者凭token不能覆盖新执行者。消费记录与幂等缓存删除、固定截止时间关单配合使用。</dd></div><div class="hl-row"><dt>边界</dt><dd>至少一次投递，不承诺Exactly Once；broker确认不代表消费完成。真实发布器到全部Redis副作用的端到端与积压恢复仍待演练。</dd></div></dl><div class="evidence"><span>实现入口</span><span>messaging/OrderOutboxService.java</span><span>messaging/OrderOutboxPublisher.java</span><span>messaging/OrderEventConsumer.java</span></div></div></article>
+<article class="card card-pad hl"><div class="hl-head"><div class="hl-no">3</div><div><h3 class="hl-title">客服会话与工具安全</h3><p class="hl-tagline">身份来自服务端，生成和工具执行都有边界</p></div></div><div class="hl-body"><dl><div class="hl-row"><dt>问题</dt><dd>模型参数不能成为查询他人数据的通道；旧生成不能覆盖清空或人工接管后的状态。</dd></div><div class="hl-row"><dt>方案</dt><dd>Spring AI ChatClient + ToolCallingAdvisor + @Tool；只注册商品、库存、本人订单与优惠券工具，ToolContext注入身份、SQL过滤归属并LIMIT 5。POST SSE返回start/delta/done/error，记录run状态与上下文版本。</dd></div><div class="hl-row"><dt>边界</dt><dd>每次最多3轮、合计6次工具调用，整批超预算不执行并明确失败。有界线程池4/8、队列16，工具等待最多2秒、生成总预算90秒；取消尽力中断，不承诺JDBC立即停止。</dd></div></dl><div class="evidence"><span>实现入口</span><span>service/ai/CustomerAiTools.java</span><span>service/ai/CustomerToolCallingManager.java</span><span>service/ai/session/CustomerSessionService.java</span></div></div></article>
+<article class="card card-pad hl"><div class="hl-head"><div class="hl-no">4</div><div><h3 class="hl-title">知识与人工服务</h3><p class="hl-tagline">发布可回滚，人工接管时暂停机器人</p></div></div><div class="hl-body"><dl><div class="hl-row"><dt>问题</dt><dd>静态知识需要版本和来源，机器人无法解决的问题需要清晰的人工处理路径。</dd></div><div class="hl-row"><dt>方案</dt><dd>文本／Markdown草稿发布为版本，支持回滚与撤回；保存本次回答实际注入的来源片段和指纹。用户申请后机器人暂停，管理员接单、回复、填写结论关闭，用户历史保留并恢复新上下文。</dd></div><div class="hl-row"><dt>边界</dt><dd>RRF用于融合关键词与向量召回排名，向量不可用可退回关键词；尚未提供模型质量指标。引用不是逐句事实核验，人工工单不执行资金操作，也没有自动升级或SLA承诺。</dd></div></dl><div class="evidence"><span>实现入口</span><span>service/ai/knowledge/KnowledgeService.java</span><span>service/ai/session/HandoffService.java</span><span>service/ai/rag/RankFusion.java</span></div></div></article>
+</div></div></section>
 
 <!-- ======================= 关键链路 ======================= -->
-<section class="section" id="flows">
-  <div class="wrap">
-    <div class="eyebrow"><h1>关键链路</h1></div>
-    <h2 class="h2">把"一次下单"拆开看</h2>
-    <p class="section-lead">
-      下面四张图分别回答：请求怎么走完整个链路、钱和超时同时到来时谁说了算、
-      订单状态怎么流转，以及 AI 客服怎么取数作答。
-    </p>
-
-    <div class="tabs" role="tablist">
-      <button class="tab" role="tab" aria-selected="true"  data-tab="t1">下单请求生命周期</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="t2">支付与超时关单竞态</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="t3">订单状态机与流转约束</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="t4">AI 客服对话链路</button>
-    </div>
-
-    <div class="panel" id="t1">
-      <figure class="figure">
-        <div class="fig-scroll">
-          <img src="assets/diagram-order.png" alt="下单请求生命周期时序图"
-               width="1600" height="590" data-zoom>
-        </div>
-        <figcaption><b>下单请求生命周期</b>
-          <span>前端 → 事务 → 落库：入口与事务边界、闸门与幂等、扣减与回滚</span></figcaption>
-      </figure>
-      <div class="flow-notes">
-        <div class="note"><h4>入口与事务边界</h4>
-          <p>token 在 axios 拦截器统一注入；<code>createOrder</code> 标在事务内，购物车校验、优惠券核销、订单落库同生共死。</p></div>
-        <div class="note"><h4>闸门与幂等</h4>
-          <p>先校验地址与购物车是否为空，再按勾选项取数；删除已选购物车项按影响行数判断，避免重复提交造成重复扣减。</p></div>
-        <div class="note"><h4>扣减与风险</h4>
-          <p>扣库存走 <code>stock &gt;= qty</code> 条件更新；下单成功即向 Redis ZSET 写入延迟关单任务。</p></div>
-      </div>
-    </div>
-
-    <div class="panel" id="t2" hidden>
-      <figure class="figure">
-        <div class="fig-scroll">
-          <img src="assets/diagram-payment.png" alt="支付回调与超时关单竞态时序图"
-               width="1600" height="590" data-zoom>
-        </div>
-        <figcaption><b>支付与超时关单竞态</b>
-          <span>两个线程争抢同一订单，用状态条件更新分出胜负</span></figcaption>
-      </figure>
-      <div class="flow-notes">
-        <div class="note"><h4>竞态怎么产生</h4>
-          <p>支付回调和延迟队列里的关单任务可能在同一时刻操作同一笔订单，两边都认为订单还是"待支付"。</p></div>
-        <div class="note"><h4>怎么裁决</h4>
-          <p>两条 UPDATE 都带 <code>and status = 0</code>，数据库保证只有一个能影响 1 行，另一个必然 0 行并失败退出。</p></div>
-        <div class="note"><h4>Redis 挂了怎么办</h4>
-          <p>关单不只依赖 Redis 延迟队列 —— 另有每 10 分钟扫库的对账任务补漏，以数据库为准，避免丢条目导致永久漏单。</p></div>
-      </div>
-    </div>
-
-    <div class="panel" id="t3" hidden>
-      <figure class="figure">
-        <div class="fig-scroll">
-          <img src="assets/diagram-lifecycle.png" alt="订单状态机与流转约束图"
-               width="1600" height="594" data-zoom>
-        </div>
-        <figcaption><b>订单状态机与流转约束</b>
-          <span>7 个状态、显式流转表，非法变更在校验层就被拒绝</span></figcaption>
-      </figure>
-      <div class="flow-notes">
-        <div class="note"><h4>状态与终态</h4>
-          <p>待支付 / 已支付 / 已发货 / 已完成 / 已取消 / 退款中 / 已退款；其中已取消、已完成、已退款为终态，不可再流转。</p></div>
-        <div class="note"><h4>流转靠白名单</h4>
-          <p>枚举里用一张 <code>TRANSITIONS</code> 表声明"当前状态允许去向哪些状态"，<code>canTransition</code> 统一校验。</p></div>
-        <div class="note"><h4>退款可撤销</h4>
-          <p>退款中记录原状态，驳回时恢复回已支付或已发货，而不是简单丢弃 —— 回滚路径也是设计过的。</p></div>
-      </div>
-    </div>
-
-    <div class="panel" id="t4" hidden>
-      <figure class="figure">
-        <div class="fig-scroll">
-          <img src="assets/diagram-ai.png" alt="AI 客服对话链路时序图"
-               width="1600" height="590" data-zoom>
-        </div>
-        <figcaption><b>AI 客服对话链路</b>
-          <span>实时数据走工具调用，静态知识走 RAG 检索，SSE 流式回吐</span></figcaption>
-      </figure>
-      <div class="flow-notes">
-        <div class="note"><h4>两条链路分工</h4>
-          <p>库存、订单、优惠券这类实时数据走工具调用查库；菜谱、平台规则这类静态知识走 RAG 检索增强。</p></div>
-        <div class="note"><h4>循环有上限</h4>
-          <p>工具调用循环设 3 轮上限并强制作答，防止模型在工具之间反复横跳造成死循环与超额调用。</p></div>
-        <div class="note"><h4>流式输出</h4>
-          <p>通过 SSE 把回答逐字推给前端，实现打字机效果；服务端需关闭响应缓冲，否则会攒成一坨再返回。</p></div>
-      </div>
-    </div>
-
-  </div>
-</section>
+<section class="section" id="flows"><div class="wrap"><div class="eyebrow"><h2>关键链路</h2></div><h3 class="h2">正常流程、事务边界与失败路径</h3><p class="section-lead">图示对应当前本地实现；消息和模型的真实生产效果以验收范围为准。</p><div class="tabs" role="tablist" aria-label="业务链路">
+<button type="button" id="tab-t1" class="tab" role="tab" aria-controls="t1" aria-selected="true" tabindex="0" data-tab="t1">下单与订单事件</button><button type="button" id="tab-t2" class="tab" role="tab" aria-controls="t2" aria-selected="false" tabindex="-1" data-tab="t2">支付与关单竞争</button><button type="button" id="tab-t3" class="tab" role="tab" aria-controls="t3" aria-selected="false" tabindex="-1" data-tab="t3">订单状态流转</button><button type="button" id="tab-t4" class="tab" role="tab" aria-controls="t4" aria-selected="false" tabindex="-1" data-tab="t4">客服生成与人工接管</button>
+</div>
+<div class="panel" id="t1" role="tabpanel" aria-labelledby="tab-t1"><figure class="figure"><div class="fig-scroll"><img src="assets/diagram-order.svg" alt="订单与Outbox原子提交、短事务领取、RabbitMQ确认和幂等副作用" width="1200" height="660" data-zoom></div><figcaption><b>下单与订单事件</b><span>订单提交不等待MQ；发送失败不改变已经提交的下单结果。</span></figcaption></figure><div class="flow-notes"><div class="note"><h4>同一事务</h4><p>校验购物车与优惠券、条件扣库存、写订单与明细、写Outbox；任一步失败一起回滚。</p></div><div class="note"><h4>异步投递</h4><p>固定eventId；FOR UPDATE SKIP LOCKED领取，租约和token约束回写，失败退避重试。</p></div><div class="note"><h4>消费与兜底</h4><p>清缓存、按原截止时间安排关单，完成后记录eventId再确认；数据库扫描兜底，重复消息不能延后截止时间。</p></div></div></div>
+<div class="panel" id="t2" role="tabpanel" aria-labelledby="tab-t2" hidden><figure class="figure"><div class="fig-scroll"><img src="assets/diagram-payment.svg" alt="订单锁序列化支付通知与关单，成功同事务提交，迟到通知保存待核查" width="1200" height="660" data-zoom></div><figcaption><b>支付与关单竞争</b><span>模拟支付；通知已受理不等于订单一定已支付。</span></figcaption></figure><div class="flow-notes"><div class="note"><h4>统一锁顺序</h4><p>申请支付和回调先锁订单，再处理支付记录；关单状态更新同样获取订单行锁。</p></div><div class="note"><h4>成功或待核查</h4><p>合法重复通知幂等受理。订单关闭、过期或金额异常时留存REVIEW_REQUIRED，不擅自重开或退款。</p></div><div class="note"><h4>失败处理</h4><p>未知支付单和非法签名拒绝；数据库写入失败回滚。Redis不是支付事实来源。</p></div></div></div>
+<div class="panel" id="t3" role="tabpanel" aria-labelledby="tab-t3" hidden><figure class="figure"><div class="fig-scroll"><img src="assets/diagram-lifecycle.png" alt="订单状态机：待支付、已支付、已发货、已完成、已取消、退款中、已退款" width="1600" height="594" data-zoom></div><figcaption><b>订单状态流转</b><span>已核对OrderStatus流转表；本图只描述订单状态，不是资金账务图。</span></figcaption></figure><div class="flow-notes"><div class="note"><h4>状态约束</h4><p>合法流转表与带当前状态条件的UPDATE配合，已完成、已取消、已退款为终态。</p></div><div class="note"><h4>退款是模拟流程</h4><p>退款申请、审核和状态回退不代表真实支付供应商已退款；资金对账和自动退款未接入。</p></div><div class="note"><h4>异常支付独立保存</h4><p>迟到成功通知记录在支付单待核查状态中，不添加或篡改订单状态。</p></div></div></div>
+<div class="panel" id="t4" role="tabpanel" aria-labelledby="tab-t4" hidden><figure class="figure"><div class="fig-scroll"><img src="assets/diagram-ai.svg" alt="用户身份与会话归属校验后按问题路由检索和工具，流式回答，版本校验落库及人工暂停" width="1200" height="660" data-zoom></div><figcaption><b>客服生成与人工接管</b><span>路由只决定证据策略，不替代鉴权；人工消息与AI历史分开保存。</span></figcaption></figure><div class="flow-notes"><div class="note"><h4>路由与证据</h4><p>知识问题检索，实时问题查只读工具，组合问题使用两类证据。工具失败不能拿历史价格或库存补答案。</p></div><div class="note"><h4>生成与取消</h4><p>单次模型订阅，经POST SSE返回事件；成功保存回答与来源，失败／取消保存终态。版本变化禁止旧结果覆盖。</p></div><div class="note"><h4>人工接管</h4><p>申请事务取消运行并递增上下文版本；机器人暂停。管理员关闭后保留历史、开启新上下文；无法回答时引导申请，不声称已自动转人工。</p></div></div></div>
+</div></section>
 
 <!-- ======================= 功能走查 ======================= -->
-<section class="section" id="shots">
-  <div class="wrap">
-    <div class="eyebrow"><h1>功能走查</h1></div>
-    <h2 class="h2">用户端与管理端</h2>
-    <p class="section-lead">
-      下面的截图来自<strong>真实全栈环境</strong>（前端连后端、数据来自 MySQL），不是
-      Demo 的模拟数据。用户端覆盖浏览、搜索、购物车、下单、支付、订单与售后；
-      管理端覆盖商品、分类、优惠券、订单发货与数据看板。（具体可进入在线体验）
-    </p>
-
-    <!-- [阶段3] 还差 5 张：食材列表 / 商品详情 / 购物车+结算 / 订单列表 / 数据看板 -->
-    <div class="shots">
-      <figure class="shot">
-        <img src="assets/shots/01-login.jpg" alt="知食喵登录页" width="1600" height="794" data-zoom>
-        <figcaption>
-          <b>登录页</b>
-          <span>JWT 无状态认证入口；演示版可一键体验，不会被注册流程卡住</span>
-        </figcaption>
-      </figure>
-
-      <figure class="shot">
-        <img src="assets/shots/02-home.jpg" alt="知食喵用户端首页" width="1600" height="768" data-zoom>
-        <figcaption>
-          <b>用户端 · 首页</b>
-          <span>菜谱按个人过敏原自动过滤（花生 / 海鲜 / 蛋 / 大豆 / 小麦 / 坚果），右侧栏可换一批</span>
-        </figcaption>
-      </figure>
-
-      <figure class="shot">
-        <img src="assets/shots/03-recipe-detail.jpg" alt="知食喵菜谱详情页" width="1600" height="790" data-zoom>
-        <figcaption>
-          <b>用户端 · 菜谱详情</b>
-          <span>所需食材标注「可购买」项并支持一键加购；烹饪步骤分步展示</span>
-        </figcaption>
-      </figure>
-
-      <figure class="shot">
-        <img src="assets/shots/06-admin-products.jpg" alt="知食喵管理端商品管理" width="1600" height="792" data-zoom>
-        <figcaption>
-          <b>管理端 · 商品管理</b>
-          <span>增删改 + 上下架 + 库存预警；库存走独立接口写入，不被编辑页的旧快照冲掉</span>
-        </figcaption>
-      </figure>
-      <figure class="shot">
-        <img src="assets/shots/04-ai-orders.jpg" alt="AI 客服查询本人订单" width="1600" height="789" data-zoom>
-        <figcaption>
-          <b>AI 客服 · 查本人订单（工具调用）</b>
-          <span>问「我的订单到哪了」，模型调用 <code>list_my_orders</code> 查库并以表格返回；
-            追问「24 号那一笔」能接着上文答 —— 工具的 userId 由服务端注入，模型拿不到别人的订单</span>
-        </figcaption>
-      </figure>
-
-      <figure class="shot">
-        <img src="assets/shots/05-ai-recipe.jpg" alt="AI 客服按菜谱作答并提示过敏原" width="1600" height="793" data-zoom>
-        <figcaption>
-          <b>AI 客服 · 菜谱问答（RAG 检索 + 健康画像）</b>
-          <span>答完标出<strong>来源：菜谱「番茄炒蛋」</strong>（检索增强，不是模型编的）；
-            并比对用户的过敏原画像，主动提示「这道菜含蛋，建议谨慎食用」</span>
-        </figcaption>
-      </figure>
-
-    </div>
-  </div>
-</section>
-
-<!-- ======================= 工程与安全 ======================= -->
-<section class="section" id="engineering">
-  <div class="wrap">
-    <div class="eyebrow"><h1>工程与安全</h1></div>
-    <div class="grid-3">
-      <div class="card panel-card">
-        <h4><span class="ico" aria-hidden="true">🧪</span>测试与质量</h4>
-        <ul class="tick">
-          <li><b>65 个测试类、580+ 用例</b>，JUnit 5 + Mockito + MockMvc，覆盖 Service 与接口层</li>
-          <li><b>Flyway 管理 20 个迁移版本</b>，表结构随应用启动自动演进，不靠手工 SQL</li>
-          <li><b>多环境配置分离</b>，local / prod 各自独立，生产缺失密钥直接启动失败</li>
-          <li><b>springdoc / Swagger UI</b> 生成接口文档，本地环境可直接调试验证</li>
-        </ul>
-      </div>
-
-      <div class="card panel-card">
-        <h4><span class="ico" aria-hidden="true">🔐</span>安全实践</h4>
-        <ul class="tick">
-          <li><b>授权默认拒绝</b>，Spring Security 逐条放行，新增接口不会"忘记加鉴权"</li>
-          <li><b>JWT 无状态认证 + 黑名单吊销</b>，退出登录后旧令牌立即失效</li>
-          <li><b>越权防护</b>：查询一律带 userId 条件，AI 工具的 userId 由服务端注入</li>
-          <li>登录与找回密码 <b>IP 维度限流</b>、密码全量 BCrypt、支付回调 HMAC 验签、上传文件魔数校验</li>
-        </ul>
-      </div>
-
-      <div class="card panel-card">
-        <h4><span class="ico" aria-hidden="true">⚙️</span>工程规范</h4>
-        <ul class="tick">
-          <li><b>DTO 入 / VO 出</b>，实体不进 Controller，接口契约与数据库结构解耦</li>
-          <li><b>构造器注入</b>替代字段注入，依赖关系显式、便于测试</li>
-          <li><b>全局异常处理</b>，业务异常统一转换成标准返回体与错误码</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
+<section class="section" id="shots"><div class="wrap"><div class="eyebrow"><h2>功能走查</h2></div><h3 class="h2">界面证据与交互演示分开标注</h3><p class="section-lead">2026-10-16隔离浏览器验收使用真实会话／工单后端和本机模型替身，不调用付费模型。静态Demo不作为模型、鉴权或性能验收证据。</p>
+<div class="shots">
+<figure class="shot shot-portrait"><img src="assets/shots/07-handoff-waiting.jpg" alt="生成取消与人工申请｜隔离后端・模型替身" loading="lazy" data-zoom><figcaption><b>生成取消与人工申请｜隔离后端・模型替身</b><span>2026-10-16：长回答期间申请人工，生成CANCELLED、工单WAITING、机器人暂停。截图为窄屏联调界面。</span></figcaption></figure>
+<figure class="shot shot-portrait"><img src="assets/shots/08-handoff-closed.jpg" alt="管理员接单与关闭｜隔离后端・模型替身" loading="lazy" data-zoom><figcaption><b>管理员接单与关闭｜隔离后端・模型替身</b><span>2026-10-16：管理员查看上下文、回复并关闭测试工单；人工交流与模型历史分开。</span></figcaption></figure>
+<figure class="shot shot-portrait"><img src="assets/shots/09-handoff-resumed.jpg" alt="多会话与生成恢复｜隔离后端・模型替身" loading="lazy" data-zoom><figcaption><b>多会话与生成恢复｜隔离后端・模型替身</b><span>2026-10-16：用户收到结论，上下文版本2，旧历史保留；关闭后新生成SUCCEEDED。</span></figcaption></figure>
+<figure class="shot" id="knowledge-shot"><img src="assets/shots/10-knowledge-demo.jpg" alt="知识草稿与发布版本｜静态Demo・模拟数据" loading="lazy" data-zoom><figcaption><b>知识草稿与发布版本｜静态Demo・模拟数据</b><span>2026-10-17：浏览器内模拟保存与发布，展示草稿、线上版本和来源说明，不代表数据库或真实检索验收。<a href="demo/#/admin/knowledge">体验知识维护 →</a></span></figcaption></figure>
+</div>
+</div></section>
 
 <!-- ======================= 底部 ======================= -->
-<footer class="foot">
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>
-        <div class="brand" style="gap:9px">
-          <span class="brand-zh">知食喵</span>
-          <span class="brand-en">Meowlia</span>
-        </div>
-        <p>
-          生鲜电商 &amp; AI 健康咨询平台 · 独立全栈项目<br>
-          Java 后端开发（AI 应用方向）
-        </p>
-      </div>
-      <div class="foot-links">
-        <a href="resume.html">个人简历（含联系方式）</a>
-        <a href="demo/">在线演示 Demo（纯前端模拟数据）</a>
-        <!-- [阶段3] 代码仓库转 public 后确认此链接可用 -->
-        <a href="https://github.com/AozoraYuzuki/ZhiShiMiao" target="_blank" rel="noopener">
-          GitHub 代码仓库 ↗
-        </a>
-      </div>
-    </div>
-    <p class="foot-note">
-      说明：本页架构图与仓库代码均来自上述项目本身。在线演示为纯前端模拟数据版本，
-      用于展示交互流程，不连接真实后端服务。
-    </p>
-  </div>
-</footer>
+<footer class="foot"><div class="wrap"><div class="foot-grid"><div><div class="brand"><span class="brand-zh">知食喵</span><span class="brand-en">Meowlia</span></div><p>生鲜商城与智能客服系统 · 个人实战项目<br>Java 后端开发 · AI 应用方向</p></div><div class="foot-links"><a href="resume.html">个人简历（含已有联系方式）</a><a href="demo/">交互 Demo（模拟数据）</a></div></div><p class="foot-note">更新：2026-10-17。Demo不连接真实后端或模型，支付为模拟协议。</p></div></footer>
 
 <!-- ======================= 灯箱 ======================= -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="放大查看架构图">
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="放大查看图示">
   <button class="close" type="button">关闭 ✕</button>
   <img src="" alt="">
 </div>
@@ -1191,13 +677,7 @@ code,kbd,pre{font-family:var(--font-mono)}
 
   var closeBtn = warn.querySelector('[data-fw-close]')
   if (closeBtn) closeBtn.addEventListener('click', function () { warn.hidden = true })
-})()
-
-/* 尚未接入的占位按钮（目前只剩「观看演示视频」，阶段 3 才录）：
-   拦掉跳转，避免评审时点出一个空链接。接入时去掉 aria-disabled 即可。 */
-document.querySelectorAll('[aria-disabled="true"]').forEach(function (el) {
-  el.addEventListener('click', function (e) { e.preventDefault(); });
-});
+})();
 
 /* ============================================================================
    吉祥物（复刻 CatMascot.vue 的行为，原版是 Vue 组件，这里是等价的原生实现）
@@ -1293,10 +773,21 @@ document.querySelectorAll('.tab').forEach(function (tab) {
   tab.addEventListener('click', function () {
     document.querySelectorAll('.tab').forEach(function (t) {
       t.setAttribute('aria-selected', String(t === tab));
+      t.tabIndex = t === tab ? 0 : -1;
     });
     document.querySelectorAll('.panel').forEach(function (p) {
       p.hidden = p.id !== tab.dataset.tab;
     });
+  });
+  tab.addEventListener('keydown', function (event) {
+    var tabs = Array.from(document.querySelectorAll('.tab'));
+    var index = tabs.indexOf(tab);
+    var target;
+    if (event.key === 'ArrowRight') target = tabs[(index + 1) % tabs.length];
+    if (event.key === 'ArrowLeft') target = tabs[(index + tabs.length - 1) % tabs.length];
+    if (event.key === 'Home') target = tabs[0];
+    if (event.key === 'End') target = tabs[tabs.length - 1];
+    if (target) { event.preventDefault(); target.click(); target.focus(); }
   });
 });
 
@@ -1304,24 +795,39 @@ document.querySelectorAll('.tab').forEach(function (tab) {
 (function () {
   var box = document.getElementById('lightbox');
   var boxImg = box.querySelector('img');
+  var closeButton = box.querySelector('.close');
+  var opener;
   document.querySelectorAll('img[data-zoom]').forEach(function (img) {
-    img.addEventListener('click', function () {
+    img.tabIndex = 0;
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', '放大查看：' + img.alt);
+    function open() {
+      opener = img;
       boxImg.src = img.src;
       boxImg.alt = img.alt;
       box.classList.add('on');
+      box.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      closeButton.focus();
+    }
+    img.addEventListener('click', open);
+    img.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); }
     });
   });
   function close() {
     box.classList.remove('on');
-    boxImg.src = '';
+    box.setAttribute('aria-hidden', 'true');
+    boxImg.removeAttribute('src');
     document.body.style.overflow = '';
+    if (opener) opener.focus();
   }
   box.addEventListener('click', function (e) {
     if (e.target === box || e.target.classList.contains('close')) close();
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && box.classList.contains('on')) close();
+    if (e.key === 'Tab' && box.classList.contains('on')) { e.preventDefault(); closeButton.focus(); }
   });
 })();
 </script>

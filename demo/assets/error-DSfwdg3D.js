@@ -1,0 +1,1 @@
+import{a as e}from"./request-o2nScCFW.js";function t(t,n=`加载失败，请稍后重试`){if(e.isAxiosError(t)){let e=t.response?.data;return e?.message?e.message:t.code===`ECONNABORTED`?`请求超时，请稍后重试`:t.response?n:`网络异常，请检查网络后重试`}return t instanceof Error&&t.message?t.message:n}export{t};

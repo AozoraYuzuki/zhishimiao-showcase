@@ -1,25 +1,11 @@
 <!DOCTYPE html>
-<!--
-  ============================================================================
-  知食喵 · 个人简历页
-  ----------------------------------------------------------------------------
-  与 showcase/index.html 共用同一套设计令牌（「芒果落日 · 墨玉交互」），
-  刻意做成**可打印**的：Ctrl+P 直接导出 PDF，不依赖任何外部文件。
-
-  ⚠️ 联系方式做了反爬处理：静态 HTML 源码里没有完整的手机号/邮箱，
-     只有 data-* 碎片，由页面底部脚本拼装后写入 DOM。
-     这挡不住针对性爬取，但能挡掉绝大多数通用爬虫。
-
-  ⚠️ 项目经历里的单元测试数 580 —— 源码实测值：65 个测试类、排除注释后的
-     @Test 注解数。数字会随用例增删变化，改动前请重新统计一遍。
-  ============================================================================
--->
+<!-- 个人简历网页。联系方式与其他经历保持不变；项目说明与展示页同步。 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>吴梓淮 · 个人简历 ｜ Java 后端开发（AI 应用方向）</title>
-<meta name="description" content="吴梓淮的个人简历：Java 后端开发 / AI 应用方向，独立完成全栈项目「知食喵 · 生鲜电商 & AI 健康咨询平台」。">
+<meta name="description" content="吴梓淮的个人简历：Java后端开发与AI应用方向。知食喵生鲜商城与智能客服项目，重点实践交易一致性、订单事件异步处理和受控客服。">
 <meta name="color-scheme" content="light">
 
 <style>
@@ -71,7 +57,7 @@ code{font-family:var(--font-mono);font-size:.88em}
   -webkit-backdrop-filter:blur(10px) saturate(1.5);backdrop-filter:blur(10px) saturate(1.5);
   border-bottom:1px solid var(--color-border-soft)}
 .nav-inner{max-width:940px;margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:22px}
-.brand{display:flex;align-items:baseline;gap:8px;text-decoration:none}
+.brand{display:flex;align-items:baseline;gap:8px;text-decoration:none;flex-shrink:0;white-space:nowrap}
 .brand-zh{font-family:var(--font-brand-zh);font-size:25px;color:var(--brand-800);line-height:1}
 .brand-en{font-family:var(--font-brand-en);font-size:15px;color:var(--brand-600)}
 .nav-links{display:flex;gap:4px;margin-left:auto}
@@ -159,6 +145,9 @@ code{font-family:var(--font-mono);font-size:.88em}
 
 @media (max-width:700px){
   .skills{grid-template-columns:1fr}
+  .nav-inner{gap:10px;padding:11px 18px}
+  .nav-links a[aria-current="page"]{display:none}
+  .nav-links a{white-space:nowrap}
   .nav-links a{padding:6px 9px;font-size:13px}
   .entry-top{flex-direction:column;gap:2px}
   .wrap{padding:0 18px}
@@ -194,7 +183,7 @@ code{font-family:var(--font-mono);font-size:.88em}
     <div class="nav-links">
       <a href="index.html">项目展示</a>
       <a href="resume.html" class="is-active" aria-current="page">简历</a>
-      <a href="demo/">在线体验</a>
+      <a href="demo/">交互 Demo</a>
     </div>
   </div>
 </nav>
@@ -216,16 +205,12 @@ code{font-family:var(--font-mono);font-size:.88em}
       </span>
     </div>
 
-    <p class="r-lead">
-      独立完成前后端全栈项目「知食喵 · 生鲜电商 &amp; AI 健康咨询平台」——
-      后端 Spring Boot，前端 Vue 3，含自研 AI 客服（工具调用 + RAG 检索）。
-      技术上投入最深的两条线是<strong>订单并发一致性</strong>与<strong>大模型应用的边界控制</strong>。
-    </p>
+    <p class="r-lead">建设全栈实战项目「知食喵｜生鲜商城与智能客服系统」，重点实践<strong>交易一致性、订单事件异步处理与受控AI客服</strong>。使用Vue 3完成页面与前后端联调；模拟支付与模型替身验收范围单独说明。</p>
 
     <div class="r-actions">
       <a class="btn btn-primary" href="index.html">← 返回项目展示</a>
       <button class="btn btn-ghost" type="button" onclick="window.print()">打印 / 存为 PDF</button>
-      <a class="btn btn-ghost" href="demo/">进入在线体验</a>
+      <a class="btn btn-ghost" href="demo/">体验交互 Demo（模拟数据）</a>
     </div>
   </div>
 </header>
@@ -253,30 +238,14 @@ code{font-family:var(--font-mono);font-size:.88em}
   </div>
 </section>
 
-<!-- ======================= 专业技能 ======================= -->
-<section class="sec">
-  <div class="wrap">
-    <div class="sec-h"><h2>专业技能</h2></div>
-    <div class="skills">
-      <div class="skill">
-        <h4>后端</h4>
-        <p>Java · Spring Boot · Spring Security · MyBatis · MySQL · Redis · RESTful API · Flyway</p>
-      </div>
-      <div class="skill">
-        <h4>AI 应用</h4>
-        <p>大模型接入（DeepSeek / OpenAI 兼容 API）· Function Calling 工具调用 · RAG 检索增强（关键词 / 向量 / 混合 + RRF 融合）· Embedding 与向量缓存 · SSE 流式输出 · Prompt 工程</p>
-      </div>
-      <div class="skill">
-        <h4>前端</h4>
-        <p>Vue 3 · TypeScript · Pinia · Element Plus · ECharts · Axios</p>
-      </div>
-      <div class="skill">
-        <h4>工程化</h4>
-        <p>Git · Maven · JUnit 5 + Mockito · Swagger / SpringDoc</p>
-      </div>
-    </div>
-  </div>
-</section>
+<section class="sec"><div class="wrap"><div class="sec-h"><h2>专业技能</h2></div><div class="skills">
+<div class="skill"><h4>Java</h4><p>具备Java开发基础，能使用集合、线程池及并发工具，理解常见线程安全问题。</p></div>
+<div class="skill"><h4>后端框架</h4><p>使用Spring Boot、MyBatis开发业务接口，使用Spring Security实现认证授权，理解Spring事务机制。</p></div>
+<div class="skill"><h4>数据库与中间件</h4><p>使用MySQL、Redis完成数据存储、缓存及限流；使用RabbitMQ实现异步处理、失败重试与幂等消费。</p></div>
+<div class="skill"><h4>AI应用</h4><p>使用Spring AI集成大模型，具备Tool Calling、RAG、SSE流式交互及工具权限控制实践。</p></div>
+<div class="skill"><h4>工程实践</h4><p>使用Git、Maven、Flyway管理代码、构建及数据库迁移；使用JUnit 5、Mockito编写测试，配置GitHub Actions CI。</p></div>
+<div class="skill"><h4>前端</h4><p>使用Vue 3、TypeScript、Pinia、Element Plus开发页面并完成前后端联调。</p></div>
+</div></div></section>
 
 <!-- ======================= 项目经历 ======================= -->
 <section class="sec">
@@ -284,33 +253,17 @@ code{font-family:var(--font-mono);font-size:.88em}
     <div class="sec-h"><h2>项目经历</h2></div>
 
     <div class="entry">
-      <div class="entry-top">
-        <h3>知食喵 —— 全民饮食销售 + 健康知识平台</h3>
-        <span class="entry-time">2026.03 – 2026.09</span>
-      </div>
-      <p class="entry-role">全栈项目 · 独立开发</p>
-      <div class="tag-row">
-        <span class="tag">Spring Boot</span><span class="tag">Spring Security + JWT</span>
-        <span class="tag">MyBatis</span><span class="tag">MySQL 8</span><span class="tag">Redis</span>
-        <span class="tag">Flyway</span><span class="tag">Vue 3 + TS</span><span class="tag">Pinia</span>
-        <span class="tag">Element Plus</span><span class="tag">DeepSeek API</span>
-      </div>
+      <div class="entry-top"><h3>知食喵｜生鲜商城与智能客服系统</h3><span class="entry-time">2026.03—至今</span></div>
+      <p class="entry-role">个人实战项目 · Java后端与AI客服重点建设</p>
+      <div class="tag-row"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">MyBatis</span><span class="tag">MySQL</span><span class="tag">Redis</span><span class="tag">RabbitMQ</span><span class="tag">Spring AI</span><span class="tag">Vue 3</span></div>
       <ul>
-        <li><b>AI 智能客服：</b>设计「工具调用 + RAG」双通道 —— 实时业务数据（商品 / 库存 / 订单 / 优惠券）走
-          Function Calling，静态知识（菜谱 / 商品 / FAQ）走 RAG；并用实时意图守卫避免两条链路的指令冲突。</li>
-        <li><b>订单并发一致性：</b>用状态机 + 原子条件更新处理「支付回调」与「超时自动关单」的并发竞态；
-          库存扣减设定条件更新防超卖；超时关单基于 Redis ZSET 延迟队列；
-          修复了取消订单漏回补库存导致库存泄露的问题。</li>
-        <li><b>性能与质量：</b>将下单与菜谱一键加购的 N+1 查询重构为「循环外一次 <code>WHERE id IN</code> 批量查 +
-          内存 Map 索引」，SQL 次数由 2N 降为 2；后端 <b>580+ 个单元测试</b>全绿；
-          Spring Security 授权采用 denyAll 兜底 + 按角色逐条放行，密码 BCrypt，
-          敏感字段 <code>@JsonProperty(WRITE_ONLY)</code> 防序列化泄露。</li>
-        <li><b>RAG 检索增强：</b>构建菜谱 / 商品 / FAQ 三类语料，实现关键词、向量、混合三种检索模式；
-          默认混合模式用 RRF（倒数排名融合）合并两路召回排名，避免异量纲分数的人工标定。</li>
+        <li><b>交易一致性：</b>将模拟支付记录持久化至MySQL，通过行锁、事务和状态校验处理重复回调及支付与关单竞争，异常通知留存待核查。</li>
+        <li><b>订单事件异步处理：</b>基于Outbox + RabbitMQ实现订单事件投递，用于清缓存与安排关单；结合发布确认、租约重试和消费幂等处理故障与重复消息。</li>
+        <li><b>智能客服：</b>基于Spring AI实现多会话、POST SSE流式回答和生成取消；分离聊天历史与模型上下文，通过版本校验拦截过期生成结果。</li>
+        <li><b>工具安全与并发：</b>提供商品、库存、本人订单及优惠券只读工具，执行服务端鉴权；采用有界线程池、超时控制及调用预算隔离工具执行。</li>
+        <li><b>知识与人工服务：</b>实现知识发布、回滚及回答来源快照，打通人工申请、接单、回复与关闭流程；完成隔离环境客服集成测试及模型替身下的浏览器闭环验证。</li>
       </ul>
-      <a class="demo-link" href="index.html">
-        ▶ 查看项目详情与在线体验
-      </a>
+      <a class="demo-link" href="index.html#highlights">查看项目核心实现 →</a>
     </div>
 
     <div class="entry">
