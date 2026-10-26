@@ -1,0 +1,1 @@
+import{Mt as e,R as t,y as n}from"./index-wum8s2pM.js";function r(e){return t(e)&&e.type===n}var i=n=>{let r=e(n)?n:[n],a=[];return r.forEach(n=>{e(n)?a.push(...i(n)):t(n)&&n.component?.subTree?a.push(n,...i(n.component.subTree)):t(n)&&e(n.children)?a.push(...i(n.children)):t(n)&&n.shapeFlag===2?a.push(...i(n.type())):a.push(n)}),a};export{r as n,i as t};

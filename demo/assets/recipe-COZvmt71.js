@@ -1,0 +1,1 @@
+import{n as e}from"./request-Dm3mHXWe.js";var t=t=>e.get(`/recipe/list`,t),n=t=>e.get(`/recipe/${t}`),r=t=>e.post(`/recipe/${t}/add-to-cart`);export{n,t as r,r as t};
